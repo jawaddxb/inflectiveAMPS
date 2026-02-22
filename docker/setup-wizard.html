@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inflectiv Node Setup Wizard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#1b0c25; --bg2:#241035; --bg3:#2e1a42; --bg4:#391f52;
+  --border:#3d2557; --border2:#4e3068;
+  --orange:#e8985d; --orange2:#f0b07a; --orange3:#f8c89a;
+  --purple:#9b59d0; --purple2:#b87ee0; --purple3:#d4a8f0;
+  --green:#2dd4a0; --red:#f06060; --blue:#60a5fa;
+  --text:#f0e8fc; --muted:#9080a8; --muted2:#6b5a80;
+  --gold:#ffd700;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px}
+
+/* Animated background */
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:
+  radial-gradient(ellipse at 20% 20%,rgba(155,89,208,.08) 0%,transparent 50%),
+  radial-gradient(ellipse at 80% 80%,rgba(232,152,93,.06) 0%,transparent 50%);
+pointer-events:none;z-index:0}
+
+.wrap{width:100%;max-width:720px;position:relative;z-index:1}
+
+/* Header */
+.hdr{text-align:center;padding:40px 0 32px}
+.hdr-logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}
+.hdr-hex{font-size:32px}
+.hdr-brand{font-size:26px;font-weight:800;color:var(--orange);letter-spacing:-0.5px}
+.hdr-sub{color:var(--muted);font-size:14px}
+
+/* Progress */
+.progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:36px}
+.step-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border2);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--muted);transition:all .3s;cursor:default;flex-shrink:0}
+.step-dot.active{border-color:var(--orange);background:rgba(232,152,93,.15);color:var(--orange)}
+.step-dot.done{border-color:var(--green);background:rgba(45,212,160,.15);color:var(--green)}
+.step-line{width:40px;height:2px;background:var(--border);transition:background .3s}
+.step-line.done{background:var(--green)}
+
+/* Card */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:36px;margin-bottom:20px;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card-title{font-size:22px;font-weight:700;margin-bottom:6px}
+.card-sub{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.5}
+
+/* Vertical selector cards */
+.verticals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:8px}
+.v-card{background:var(--bg3);border:2px solid var(--border);border-radius:14px;padding:20px 16px;cursor:pointer;transition:all .25s;text-align:center;position:relative;overflow:hidden}
+.v-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--orange);transform:scaleX(0);transition:transform .25s}
+.v-card:hover{border-color:var(--border2);background:var(--bg4);transform:translateY(-2px)}
+.v-card.selected{border-color:var(--orange);background:rgba(232,152,93,.08)}
+.v-card.selected::before{transform:scaleX(1)}
+.v-card-emoji{font-size:28px;margin-bottom:10px}
+.v-card-name{font-weight:600;font-size:14px;margin-bottom:4px}
+.v-card-desc{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:12px}
+.v-card-badge{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green);background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.2);border-radius:8px;padding:2px 8px}
+.v-card-refresh{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* Earnings mini-chart */
+.earnings-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px}
+.e-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.e-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.e-val{font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--orange)}
+.e-sub{font-size:10px;color:var(--muted2);margin-top:2px}
+
+/* Form fields */
+.field{margin-bottom:20px}
+.field-label{font-size:13px;font-weight:500;color:var(--purple3);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.field-label .badge{font-size:10px;background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.2);color:var(--green);padding:1px 6px;border-radius:8px}
+.field-label .opt{font-size:10px;color:var(--muted2)}
+fieldset{border:none}
+input[type=text],input[type=password],select{
+  width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;
+  padding:12px 16px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;
+  outline:none;transition:border .2s;
+}
+input:focus,select:focus{border-color:var(--orange)}
+input::placeholder{color:var(--muted2)}
+select option{background:var(--bg2)}
+.field-hint{font-size:11px;color:var(--muted2);margin-top:6px}
+
+/* Provider pills */
+.providers{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.prov-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:6px 14px;cursor:pointer;font-size:12px;color:var(--muted);transition:all .2s;font-family:'Inter',sans-serif}
+.prov-btn.active{background:rgba(155,89,208,.15);border-color:var(--purple);color:var(--purple2);font-weight:500}
+
+/* Code block */
+.code-block{background:var(--bg);border:1px solid var(--border2);border-radius:12px;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--orange2);line-height:1.7;overflow-x:auto;position:relative}
+.code-block .comment{color:var(--muted2)}
+.code-block .key{color:var(--purple2)}
+.code-block .val{color:var(--green)}
+.code-block .cmd{color:var(--blue)}
+.copy-btn{position:absolute;top:10px;right:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:5px 12px;font-size:11px;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.copy-btn:hover{border-color:var(--orange);color:var(--orange)}
+.copy-btn.copied{border-color:var(--green);color:var(--green)}
+
+/* Checklist */
+.check-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.check-list li{display:flex;align-items:flex-start;gap:12px;font-size:14px}
+.check-list .icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;margin-top:1px}
+.check-list .icon.ok{background:rgba(45,212,160,.15);color:var(--green)}
+.check-list .icon.warn{background:rgba(232,152,93,.15);color:var(--orange)}
+.check-list .icon.req{background:rgba(155,89,208,.15);color:var(--purple2)}
+
+/* Summary boxes */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.sum-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px}
+.sum-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.sum-val{font-size:15px;font-weight:600}
+.sum-val.orange{color:var(--orange)}
+.sum-val.green{color:var(--green)}
+.sum-val.purple{color:var(--purple2)}
+
+/* Buttons */
+.btn-row{display:flex;gap:12px;justify-content:flex-end;margin-top:28px}
+.btn{padding:12px 28px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:none}
+.btn-primary{background:var(--orange);color:#1b0c25}
+.btn-primary:hover{background:var(--orange2);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--muted2);cursor:not-allowed;transform:none}
+.btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--muted)}
+.btn-secondary:hover{border-color:var(--orange);color:var(--orange)}
+
+/* Success state */
+.success-wrap{text-align:center;padding:20px 0}
+.success-icon{font-size:56px;margin-bottom:16px;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+.success-title{font-size:24px;font-weight:700;color:var(--green);margin-bottom:8px}
+.success-sub{color:var(--muted);font-size:15px;line-height:1.6}
+
+.hidden{display:none!important}
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:500}
+.tag.orange{background:rgba(232,152,93,.15);border:1px solid rgba(232,152,93,.3);color:var(--orange2)}
+.tag.green{background:rgba(45,212,160,.15);border:1px solid rgba(45,212,160,.3);color:var(--green)}
+.tag.purple{background:rgba(155,89,208,.15);border:1px solid rgba(155,89,208,.3);color:var(--purple2)}
+
+.divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+
+@media(max-width:600px){
+  .verticals{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr}
+  .earnings-row{grid-template-columns:1fr}
+  .card{padding:24px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-logo">
+    <span class="hdr-hex">⬡</span>
+    <span class="hdr-brand">Inflectiv</span>
+  </div>
+  <div class="hdr-sub">Vertical Intelligence Node · Setup Wizard</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress" id="progress">
+  <div class="step-dot active" id="dot-1">1</div>
+  <div class="step-line" id="line-1"></div>
+  <div class="step-dot" id="dot-2">2</div>
+  <div class="step-line" id="line-2"></div>
+  <div class="step-dot" id="dot-3">3</div>
+  <div class="step-line" id="line-3"></div>
+  <div class="step-dot" id="dot-4">4</div>
+  <div class="step-line" id="line-4"></div>
+  <div class="step-dot" id="dot-5">✓</div>
+</div>
+
+<!-- STEP 1: Choose Vertical -->
+<div class="card" id="step-1">
+  <div class="card-title">🧩 Choose Your Vertical</div>
+  <div class="card-sub">Pick a data niche to own. Your node will autonomously research, structure and publish datasets in this category — earning $INAI for every query.</div>
+  <div class="verticals">
+    <div class="v-card" onclick="selectVertical(this,'defi','💰','DeFi Intelligence','defi_v2.1','Hourly','0.002','Tracks DeFi protocols, TVL, APY and risk scores across all major chains')">
+      <div class="v-card-emoji">💰</div>
+      <div class="v-card-name">DeFi Intelligence</div>
+      <div class="v-card-desc">TVL, APY, protocol risk, liquidity across 15+ chains</div>
+      <div class="v-card-badge">71,240 queries/month</div>
+      <div class="v-card-refresh">⏰ Refreshes Hourly</div>
+    </div>
+    <div class="v-card" onclick="selectVertical(this,'ai-models','🤖','AI Intelligence','ai_models_v1.3','Daily','0.001','Tracks AI model releases, benchmark scores and API pricing')">
+      <div class="v-card-emoji">🤖</div>
+      <div class="v-card-name">AI Intelligence</div>
+      <div class="v-card-desc">Model releases, benchmarks, pricing, capabilities</div>
+      <div class="v-card-badge">58,900 queries/month</div>
+      <div class="v-card-refresh">⏰ Refreshes Daily</div>
+    </div>
+    <div class="v-card" onclick="selectVertical(this,'crypto-news','📰','Crypto News','crypto_news_v1.2','Hourly','0.003','Structured crypto news with sentiment scoring and entity extraction')">
+      <div class="v-card-emoji">📰</div>
+      <div class="v-card-name">Crypto News</div>
+      <div class="v-card-desc">Sentiment-scored news with entity extraction</div>
+      <div class="v-card-badge">32,100 queries/month</div>
+      <div class="v-card-refresh">⏰ Refreshes Hourly</div>
+    </div>
+  </div>
+  <div class="earnings-row" id="earnings-row" style="display:none">
+    <div class="e-card"><div class="e-label">Conservative</div><div class="e-val" id="earn-low">—</div><div class="e-sub">$INAI / month</div></div>
+    <div class="e-card"><div class="e-label">Moderate</div><div class="e-val" id="earn-mid">—</div><div class="e-sub">$INAI / month</div></div>
+    <div class="e-card"><div class="e-label">Optimistic</div><div class="e-val" id="earn-high">—</div><div class="e-sub">$INAI / month</div></div>
+  </div>
+  <div class="btn-row"><button class="btn btn-primary" id="btn-1" disabled onclick="goStep(2)">Continue →</button></div>
+</div>
+
+<!-- STEP 2: API Keys -->
+<div class="card hidden" id="step-2">
+  <div class="card-title">🔑 Configure API Keys</div>
+  <div class="card-sub">Your node needs an Inflectiv API key to publish datasets, and an LLM API key to power its research intelligence.</div>
+  <div class="field">
+    <div class="field-label">Inflectiv API Key <span class="badge">Required</span></div>
+    <input type="password" id="inflectiv-key" placeholder="inai_live_xxxxxxxxxxxxxxxxxxxx" oninput="validateStep2()">
+    <div class="field-hint">Get yours at <strong style="color:var(--orange)">inflectiv.ai/settings/api</strong></div>
+  </div>
+  <div class="field">
+    <div class="field-label">LLM Provider</div>
+    <div class="providers">
+      <button class="prov-btn active" onclick="setProvider(this,'openai')">OpenAI</button>
+      <button class="prov-btn" onclick="setProvider(this,'anthropic')">Anthropic</button>
+      <button class="prov-btn" onclick="setProvider(this,'openrouter')">OpenRouter</button>
+      <button class="prov-btn" onclick="setProvider(this,'groq')">Groq</button>
+    </div>
+    <input type="password" id="llm-key" placeholder="sk-..." oninput="validateStep2()">
+    <div class="field-hint" id="llm-hint">Get yours at <strong style="color:var(--orange)">platform.openai.com/api-keys</strong></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+    <button class="btn btn-primary" id="btn-2" disabled onclick="goStep(3)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 3: Wallet -->
+<div class="card hidden" id="step-3">
+  <div class="card-title">👛 Connect Your Wallet</div>
+  <div class="card-sub">Add your wallet address to receive $INAI earnings when other agents query your datasets. You can skip this and add it later.</div>
+  <div class="field">
+    <div class="field-label">Wallet Address <span class="opt">(optional)</span></div>
+    <input type="text" id="wallet" placeholder="0x..." oninput="validateStep3()">
+    <div class="field-hint">EVM-compatible wallet (MetaMask, Rabby, etc.) — or Sui wallet address</div>
+  </div>
+  <ul class="check-list">
+    <li><div class="icon ok">✓</div><div>Earnings accumulate automatically per query on your datasets</div></li>
+    <li><div class="icon ok">✓</div><div>80% of query fees go to you, 20% to the Inflectiv protocol</div></li>
+    <li><div class="icon warn">i</div><div>You can add or change your wallet address at any time in the node config</div></li>
+  </ul>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+    <button class="btn btn-secondary" onclick="goStep(4)">Skip</button>
+    <button class="btn btn-primary" id="btn-3" onclick="goStep(4)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 4: Review & Generate -->
+<div class="card hidden" id="step-4">
+  <div class="card-title">⚙️ Review & Generate Config</div>
+  <div class="card-sub">Here's your complete node configuration. Copy the files below to launch your node.</div>
+  <div class="summary-grid">
+    <div class="sum-box"><div class="sum-label">Vertical</div><div class="sum-val orange" id="sum-vertical">—</div></div>
+    <div class="sum-box"><div class="sum-label">Schema</div><div class="sum-val purple" id="sum-schema">—</div></div>
+    <div class="sum-box"><div class="sum-label">Refresh</div><div class="sum-val green" id="sum-refresh">—</div></div>
+    <div class="sum-box"><div class="sum-label">Price per query</div><div class="sum-val orange" id="sum-price">— $INAI</div></div>
+  </div>
+  <hr class="divider">
+  <div style="margin-bottom:12px;font-size:13px;font-weight:500;color:var(--purple3)">📄 .env file</div>
+  <div class="code-block" style="position:relative">
+    <button class="copy-btn" onclick="copyCode('env-block',this)">Copy</button>
+    <pre id="env-block"></pre>
+  </div>
+  <div style="margin:20px 0 12px;font-size:13px;font-weight:500;color:var(--purple3)">🐳 Docker launch command</div>
+  <div class="code-block" style="position:relative">
+    <button class="copy-btn" onclick="copyCode('docker-block',this)">Copy</button>
+    <pre id="docker-block"></pre>
+  </div>
+  <div style="margin:20px 0 12px;font-size:13px;font-weight:500;color:var(--purple3)">🐍 Python launch command</div>
+  <div class="code-block" style="position:relative">
+    <button class="copy-btn" onclick="copyCode('python-block',this)">Copy</button>
+    <pre id="python-block"></pre>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(5)">🚀 Done — Launch My Node!</button>
+  </div>
+</div>
+
+<!-- STEP 5: Success -->
+<div class="card hidden" id="step-5">
+  <div class="success-wrap">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Your Node is Ready!</div>
+    <div class="success-sub">Run the command above and your <strong id="success-vertical">—</strong> node will start publishing datasets to the Inflectiv marketplace. You'll earn $INAI for every query it serves.</div>
+  </div>
+  <hr class="divider">
+  <ul class="check-list">
+    <li><div class="icon ok">1</div><div><strong>Copy your .env file</strong> — save to your project root</div></li>
+    <li><div class="icon ok">2</div><div><strong>Run the Docker command</strong> — or the Python command if you prefer</div></li>
+    <li><div class="icon ok">3</div><div><strong>Watch the leaderboard</strong> — your node will appear as it publishes datasets</div></li>
+    <li><div class="icon ok">4</div><div><strong>Check your wallet</strong> — $INAI earnings accumulate automatically</div></li>
+  </ul>
+  <hr class="divider">
+  <div style="text-align:center;margin-top:8px">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Want to run multiple verticals? Start another node:</div>
+    <button class="btn btn-secondary" onclick="resetWizard()">＋ Set Up Another Node</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+let state = { step:1, vertical:'', emoji:'', name:'', schema:'', refresh:'', price:'', desc:'' };
+let provider = 'openai';
+const providerHints = {
+  openai:'platform.openai.com/api-keys',
+  anthropic:'console.anthropic.com/settings/keys',
+  openrouter:'openrouter.ai/settings/keys',
+  groq:'console.groq.com/keys'
+};
+const earningsData = {
+  defi:{low:12,mid:142,high:1424},
+  'ai-models':{low:6,mid:59,high:589},
+  'crypto-news':{low:10,mid:96,high:963}
+};
+
+function selectVertical(el,id,emoji,name,schema,refresh,price,desc){
+  document.querySelectorAll('.v-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  Object.assign(state,{vertical:id,emoji,name,schema,refresh,price,desc});
+  document.getElementById('btn-1').disabled = false;
+  const e = earningsData[id];
+  if(e){
+    document.getElementById('earn-low').textContent = e.low;
+    document.getElementById('earn-mid').textContent = e.mid;
+    document.getElementById('earn-high').textContent = e.high;
+    document.getElementById('earnings-row').style.display='grid';
+  }
+}
+
+function setProvider(btn,p){
+  provider=p;
+  document.querySelectorAll('.prov-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('llm-hint').innerHTML=`Get yours at <strong style="color:var(--orange)">${providerHints[p]}</strong>`;
+  document.getElementById('llm-key').placeholder = p==='openai'?'sk-...':p==='anthropic'?'sk-ant-...':p==='openrouter'?'sk-or-v1-...':'gsk_...';
+  validateStep2();
+}
+
+function validateStep2(){
+  const ik = document.getElementById('inflectiv-key').value.trim();
+  const lk = document.getElementById('llm-key').value.trim();
+  document.getElementById('btn-2').disabled = !(ik && lk);
+}
+function validateStep3(){
+  // wallet is optional, button always enabled
+}
+
+function goStep(n){
+  document.getElementById('step-'+state.step).classList.add('hidden');
+  state.step = n;
+  document.getElementById('step-'+n).classList.remove('hidden');
+  if(n===4) buildConfig();
+  if(n===5) document.getElementById('success-vertical').textContent = state.emoji+' '+state.name;
+  updateProgress(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress(n){
+  for(let i=1;i<=5;i++){
+    const dot=document.getElementById('dot-'+i);
+    dot.className='step-dot'+(i<n?' done':i===n?' active':'');
+    if(i<5){
+      const line=document.getElementById('line-'+i);
+      line.className='step-line'+(i<n?' done':'');
+    }
+  }
+}
+
+function buildConfig(){
+  const ik = document.getElementById('inflectiv-key').value.trim();
+  const lk = document.getElementById('llm-key').value.trim();
+  const wallet = document.getElementById('wallet').value.trim();
+  
+  document.getElementById('sum-vertical').textContent = state.emoji+' '+state.name;
+  document.getElementById('sum-schema').textContent = state.schema;
+  document.getElementById('sum-refresh').textContent = state.refresh;
+  document.getElementById('sum-price').textContent = state.price+' $INAI';
+
+  const envContent = `# Inflectiv Vertical Intelligence Node — .env
+# Generated by Setup Wizard
+
+# ── Inflectiv ──────────────────────
+INFLECTIV_API_KEY=${ik}
+INFLECTIV_BASE_URL=https://api.inflectiv.ai/v1
+
+# ── LLM Provider ───────────────────
+LLM_PROVIDER=${provider}
+LLM_API_KEY=${lk}
+
+# ── Wallet ─────────────────────────
+WALLET_ADDRESS=${wallet||'# add your wallet address here'}
+
+# ── Node Profile ───────────────────
+PROFILE=${state.vertical}
+DEMO_MODE=false
+LOG_LEVEL=INFO
+DATA_DIR=./data`;
+
+  const dockerCmd = `docker run -d \\
+  --name inflectiv-${state.vertical}-node \\
+  --restart unless-stopped \\
+  --env-file .env \\
+  -v $(pwd)/data:/data \\
+  inflectiv/node:latest`;
+
+  const pythonCmd = `# Clone the repo first:
+# git clone https://github.com/inflectiv/agent-node
+# cd agent-node && cp .env.example .env
+# (edit .env with your keys above)
+
+python nodes/node_launcher.py --profile ${state.vertical}`;
+
+  document.getElementById('env-block').textContent = envContent;
+  document.getElementById('docker-block').textContent = dockerCmd;
+  document.getElementById('python-block').textContent = pythonCmd;
+}
+
+function copyCode(id, btn){
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function resetWizard(){
+  state = { step:1, vertical:'', emoji:'', name:'', schema:'', refresh:'', price:'', desc:'' };
+  for(let i=1;i<=5;i++) document.getElementById('step-'+i).classList.add('hidden');
+  document.getElementById('step-1').classList.remove('hidden');
+  document.querySelectorAll('.v-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('btn-1').disabled=true;
+  document.getElementById('earnings-row').style.display='none';
+  updateProgress(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body></html>

@@ -1,0 +1,72 @@
+{
+  "version": "0.1.0",
+  "updated": "2026-02-22",
+  "description": "VINN taxonomy — pattern-based classifier for vault contributions. Community-maintained via PRs.",
+  "categories": {
+    "defi_governance": {
+      "vinn": "inflectiv-defi-node",
+      "label": "DeFi Governance",
+      "terms": ["governance", "proposal", "vote", "snapshot", "quorum", "dao", "multisig",
+                "aave", "compound", "uniswap", "curve", "maker", "frax", "lido",
+                "parameter change", "temperature check", "on-chain vote"],
+      "temporal_markers": ["voting ends", "proposal #", "passed", "rejected", "executed"]
+    },
+    "defi_tvl": {
+      "vinn": "inflectiv-defi-node",
+      "label": "DeFi TVL & Liquidity",
+      "terms": ["tvl", "total value locked", "liquidity", "pool", "amm", "dex",
+                "lending", "borrowing", "collateral", "utilisation", "apy", "apr",
+                "yield", "liquidity mining", "incentive"],
+      "temporal_markers": ["current tvl", "as of", "up", "down", "increased", "dropped"]
+    },
+    "defi_tokens": {
+      "vinn": "inflectiv-defi-node",
+      "label": "Token Analytics",
+      "terms": ["token", "price", "market cap", "volume", "supply", "circulation",
+                "eth", "btc", "sol", "sui", "usdc", "usdt", "dai", "wbtc",
+                "coingecko", "coinmarketcap", "dexscreener", "trading pair"],
+      "temporal_markers": ["current price", "24h", "7d", "ath", "all-time high"]
+    },
+    "ai_models": {
+      "vinn": "inflectiv-ai-node",
+      "label": "AI Model Intelligence",
+      "terms": ["llm", "model", "benchmark", "context window", "parameters", "fine-tuning",
+                "gpt", "claude", "gemini", "llama", "mistral", "deepseek", "qwen",
+                "openai", "anthropic", "google deepmind", "meta ai", "hugging face",
+                "mmlu", "hellaswag", "humaneval", "arena", "evals"],
+      "temporal_markers": ["released", "launched", "version", "latest", "updated"]
+    },
+    "ai_agents": {
+      "vinn": "inflectiv-ai-node",
+      "label": "AI Agent Ecosystem",
+      "terms": ["agent", "agentic", "multi-agent", "tool use", "function calling",
+                "a2a", "mcp", "openai agent", "langchain", "autogen", "crewai",
+                "openclaw", "agent zero", "memory", "rag", "workflow"],
+      "temporal_markers": ["launched", "announced", "new capability", "updated"]
+    },
+    "crypto_news": {
+      "vinn": "inflectiv-crypto-news-node",
+      "label": "Crypto News & Events",
+      "terms": ["crypto", "blockchain", "web3", "regulation", "sec", "cftc", "etf",
+                "hack", "exploit", "bridge", "launch", "mainnet", "testnet",
+                "partnership", "acquisition", "funding", "raise", "series"],
+      "temporal_markers": ["today", "breaking", "just announced", "confirmed", "report"]
+    },
+    "l2_infrastructure": {
+      "vinn": "inflectiv-defi-node",
+      "label": "L2 & Infrastructure",
+      "terms": ["layer 2", "l2", "rollup", "optimism", "arbitrum", "base", "zksync",
+                "starknet", "polygon", "sui", "aptos", "solana", "avalanche",
+                "gas", "tps", "throughput", "sequencer", "bridge", "canonical bridge"],
+      "temporal_markers": ["upgrade", "migration", "deployment", "live"]
+    },
+    "nft_markets": {
+      "vinn": "inflectiv-crypto-news-node",
+      "label": "NFT & Digital Assets",
+      "terms": ["nft", "collection", "floor price", "opensea", "blur", "magic eden",
+                "mint", "royalty", "pfp", "generative", "1/1", "digital art",
+                "gaming", "metaverse", "virtual land"],
+      "temporal_markers": ["floor", "volume", "sales", "listed", "sold"]
+    }
+  }
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inflectiv Vault — Contribution Approvals</title>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161a23;
+    --border: #252a38;
+    --accent: #6c63ff;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --inai: #a78bfa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header span { font-size: 12px; color: var(--muted); background: var(--border); padding: 2px 8px; border-radius: 4px; }
+  .vault-id { margin-left: auto; font-size: 12px; color: var(--muted); font-family: monospace; }
+
+  .token-bar { background: #1e1230; border-bottom: 1px solid #2d1f50; padding: 10px 24px; display: flex; align-items: center; gap: 10px; }
+  .token-bar label { font-size: 12px; color: var(--muted); }
+  .token-bar input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 6px 10px; border-radius: 6px; font-family: monospace; font-size: 12px; width: 380px; }
+  .token-bar button { background: var(--accent); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+
+  .layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 90px); }
+
+  /* Stats sidebar */
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 20px; }
+  .sidebar h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; }
+  .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+  .stat-card .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .stat-card .value { font-size: 24px; font-weight: 700; }
+  .stat-card .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .inai-value { color: var(--inai); }
+  .ratio-bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+  .ratio-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.5s; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge-grace { background: #1e3a5f; color: #60a5fa; }
+  .badge-full { background: #14532d; color: #4ade80; }
+  .badge-limited { background: #7c2d12; color: #fb923c; }
+
+  /* Main panel */
+  .main { padding: 24px; overflow-y: auto; }
+  .main h2 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .main .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* Contribution card */
+  .contrib-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+  .contrib-header { padding: 14px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+  .contrib-id { font-family: monospace; font-size: 11px; color: var(--muted); }
+  .contrib-time { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .category-tag { background: #1e1a3f; color: var(--accent); border: 1px solid #3730a3; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .confidence { font-size: 11px; color: var(--muted); }
+
+  .diff-view { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .diff-panel { padding: 14px 18px; }
+  .diff-panel:first-child { border-right: 1px solid var(--border); background: rgba(239,68,68,0.04); }
+  .diff-panel:last-child { background: rgba(34,197,94,0.04); }
+  .diff-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .diff-label.original { color: var(--red); }
+  .diff-label.sanitised { color: var(--green); }
+  .diff-text { font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .redacted { background: rgba(239,68,68,0.15); color: var(--red); padding: 0 3px; border-radius: 3px; font-family: monospace; }
+
+  .contrib-footer { padding: 12px 18px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border); background: rgba(255,255,255,0.01); }
+  .stripped-terms { font-size: 11px; color: var(--muted); flex: 1; }
+  .stripped-terms strong { color: var(--yellow); }
+  .btn { padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; border: none; cursor: pointer; transition: opacity 0.15s; }
+  .btn:hover { opacity: 0.85; }
+  .btn-approve { background: var(--green); color: #fff; }
+  .btn-reject { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .inai-preview { font-size: 11px; color: var(--inai); }
+
+  .loading { color: var(--muted); font-size: 13px; padding: 40px; text-align: center; }
+  .error-msg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--red); padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
+  .success-msg { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: var(--green); padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;">⬡</div>
+  <h1>Inflectiv Vault</h1>
+  <span>Contribution Approvals</span>
+  <div class="vault-id" id="vault-id">loading...</div>
+</header>
+
+<div class="token-bar">
+  <label>Vault Token</label>
+  <input type="password" id="token-input" placeholder="vtok_..." />
+  <button onclick="loadAll()">Connect</button>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h2>📊 Vault Stats</h2>
+    <div class="stat-card">
+      <div class="label">Access Tier</div>
+      <div class="value" id="stat-tier">—</div>
+      <div class="sub" id="stat-grace"></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Queries Made</div>
+      <div class="value" id="stat-queries">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Contributions Approved</div>
+      <div class="value" id="stat-approved">—</div>
+      <div class="label" style="margin-top:8px;">Contribution Ratio</div>
+      <div class="ratio-bar"><div class="ratio-fill" id="ratio-fill" style="width:0%"></div></div>
+      <div class="sub" id="stat-ratio">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">$INAI Earned</div>
+      <div class="value inai-value" id="stat-inai">—</div>
+      <div class="sub" id="stat-pending-inai"></div>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--muted);line-height:1.6;">
+      Earn $INAI by contributing structured intelligence to the Inflectiv VINN network.
+      <br><br>
+      <strong style="color:var(--text);">Ratio target: 0.1+</strong><br>
+      10 queries → 1 contribution unlocks full access.
+    </div>
+  </aside>
+
+  <main class="main">
+    <h2>Pending Contributions</h2>
+    <p class="subtitle">Review sanitised diffs before publishing to the VINN network</p>
+    <div id="messages"></div>
+    <div id="contrib-list"><div class="loading">Enter your vault token and click Connect →</div></div>
+  </main>
+</div>
+
+<script>
+const BASE = window.location.origin;
+let TOKEN = "";
+
+function token() {
+  TOKEN = document.getElementById("token-input").value.trim();
+  return TOKEN;
+}
+
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: { "X-Vault-Token": token(), "Content-Type": "application/json" }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(BASE + path, opts);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function loadAll() {
+  try {
+    const [info, stats, pending] = await Promise.all([
+      api("GET", "/vault/info"),
+      api("GET", "/vault/stats"),
+      api("GET", "/vault/contribute/pending")
+    ]);
+    document.getElementById("vault-id").textContent = info.vault_id || "—";
+    renderStats(stats);
+    renderPending(pending.pending || []);
+  } catch(e) {
+    showMsg("error", "Connection failed: " + e.message);
+  }
+}
+
+function renderStats(s) {
+  const tierEl = document.getElementById("stat-tier");
+  const tier = s.access_tier || "grace";
+  tierEl.innerHTML = `<span class="badge badge-${tier}">${tier.toUpperCase()}</span>`;
+  if (s.grace_period_active) {
+    document.getElementById("stat-grace").textContent = `${s.grace_days_remaining} days remaining`;
+  }
+  document.getElementById("stat-queries").textContent = s.queries_made ?? 0;
+  document.getElementById("stat-approved").textContent = s.contributions_approved ?? 0;
+  const ratio = Math.min(1, (s.ratio || 0) * 10);
+  document.getElementById("ratio-fill").style.width = (ratio * 100) + "%";
+  document.getElementById("stat-ratio").textContent = `${s.ratio ?? 0} (target: 0.1)`;
+  document.getElementById("stat-inai").textContent = `${s.inai_earned ?? 0} $INAI`;
+  document.getElementById("stat-pending-inai").textContent = `+${s.inai_pending ?? 0} pending approval`;
+}
+
+function renderPending(items) {
+  const el = document.getElementById("contrib-list");
+  if (!items.length) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">✅</div><div>No pending contributions</div><div style="font-size:12px;margin-top:8px;">Use POST /vault/contribute to stage new intelligence</div></div>`;
+    return;
+  }
+  el.innerHTML = items.map(item => {
+    const top = item.classifications?.[0];
+    const sanitised_marked = (item.sanitised || "").replace(/\[redacted\]/g, '<span class="redacted">[redacted]</span>');
+    const stripped = item.stripped_terms?.length
+      ? `Stripped: <strong>${item.stripped_terms.join(", ")}</strong>`
+      : '<span style="color:var(--green)">No personal references detected</span>';
+    const ts = item.staged_at ? new Date(item.staged_at).toLocaleString() : "";
+    return `
+      <div class="contrib-card" id="card-${item.id}">
+        <div class="contrib-header">
+          <span class="contrib-id">${item.id?.slice(0,8) || "unknown"}...</span>
+          ${top ? `<span class="category-tag">${top.category}</span><span class="confidence">${(top.confidence*100).toFixed(0)}% conf</span>` : ""}
+          <span class="contrib-time">${ts}</span>
+        </div>
+        <div class="diff-view">
+          <div class="diff-panel">
+            <div class="diff-label original">− Original (${item.original_length || 0} chars)</div>
+            <div class="diff-text" style="color:#fca5a5">${escHtml(item.sanitised || "")}</div>
+          </div>
+          <div class="diff-panel">
+            <div class="diff-label sanitised">+ Sanitised for VINN</div>
+            <div class="diff-text">${sanitised_marked}</div>
+          </div>
+        </div>
+        <div class="contrib-footer">
+          <span class="stripped-terms">${stripped}</span>
+          <span class="inai-preview">+0.5 $INAI on approve</span>
+          <button class="btn btn-reject" onclick="reject('${item.id}')">✕ Reject</button>
+          <button class="btn btn-approve" onclick="approve('${item.id}')">✓ Approve &amp; Publish</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+async function approve(id) {
+  try {
+    const r = await api("POST", `/vault/pending/${id}/approve`);
+    document.getElementById(`card-${id}`)?.remove();
+    showMsg("success", `✓ Published to VINN. ${r.inai_earned} $INAI earned!`);
+    loadAll();
+  } catch(e) { showMsg("error", e.message); }
+}
+
+async function reject(id) {
+  try {
+    await api("DELETE", `/vault/pending/${id}`);
+    document.getElementById(`card-${id}`)?.remove();
+    showMsg("success", "Contribution discarded.");
+  } catch(e) { showMsg("error", e.message); }
+}
+
+function showMsg(type, text) {
+  const el = document.getElementById("messages");
+  el.innerHTML = `<div class="${type}-msg">${text}</div>`;
+  setTimeout(() => el.innerHTML = "", 4000);
+}
+
+// Auto-load if token is in localStorage
+const saved = localStorage.getItem("vault_token");
+if (saved) { document.getElementById("token-input").value = saved; TOKEN = saved; loadAll(); }
+document.getElementById("token-input").addEventListener("change", e => {
+  localStorage.setItem("vault_token", e.target.value);
+});
+</script>
+</body>
+</html>

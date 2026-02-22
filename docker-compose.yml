@@ -1,0 +1,58 @@
+# ============================================================
+# Inflectiv Agent Node — Docker Compose
+# ============================================================
+# Usage:
+#   cp .env.example .env    # configure your keys
+#   docker compose up -d    # start the node
+#   open http://localhost:50001
+# ============================================================
+
+services:
+  inflectiv-agent-node:
+    image: agent0ai/agent-zero:latest
+    container_name: inflectiv-agent-node
+    ports:
+      - "8765:8765"
+      - "50001:80"
+    volumes:
+      # Mount Inflectiv skills
+      - ./skills:/a0/skills/inflectiv-node
+      # Mount custom system prompts
+      - ./prompts:/a0/agents/inflectiv-node/prompts
+      # Persistent user data
+      - inflectiv_usr:/a0/usr
+    env_file:
+      - .env
+    environment:
+      # Force use of the Inflectiv Node agent profile
+      - A0_SET_agent_profile=inflectiv-node
+    restart: unless-stopped
+    labels:
+      - "com.inflectiv.service=agent-node"
+      - "com.inflectiv.version=1.0.0"
+      - "com.openclaw.compatible=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  inflectiv_usr:
+    driver: local
+    labels:
+      - "com.inflectiv.data=persistent"
+
+# ── Optional: Expose as A2A endpoint for OpenClaw swarm ──────
+# Uncomment below to enable A2A protocol endpoint on port 50002
+# and allow other OpenClaw agents to call this node remotely.
+#
+# networks:
+#   default:
+#     name: openclaw-swarm
+#
+# Add to the service:
+#   ports:
+#     - "50001:80"
+#     - "50002:8080"   # A2A protocol endpoint

@@ -1,0 +1,44 @@
+# Inflectiv Vault Agent Configuration
+# Connect your agent to personal + knowledge vaults
+# Usage: VAULTS_CONFIG=/path/to/vaults.yaml uvicorn vault_server:app --port 8766
+
+personal:
+  # Personal vault runs as your local vault_server instance
+  url: http://localhost:8766
+  token: vtok_YOUR_OWNER_TOKEN   # printed on first startup
+
+knowledge_vaults:
+  # Local knowledge vaults — directories containing markdown intelligence files
+  # These are auto-discovered from VAULT_KNOWLEDGE_PATH but can also be listed explicitly
+  - name: defi_intelligence
+    path: /vault/knowledge_vaults/defi_intelligence   # local path to vault dir
+    type: knowledge
+    description: "DeFi Intelligence — TVL, governance, rates, Aave/Compound/Uniswap"
+
+  - name: ai_intelligence
+    path: /vault/knowledge_vaults/ai_intelligence
+    type: knowledge
+    description: "AI Model Intelligence — benchmarks, pricing, releases"
+
+  # Custom shared vault — e.g. your team's research
+  # - name: team_research
+  #   path: /shared/team-vault
+  #   type: shared
+  #   description: "Team research notes"
+
+
+  # Remote vault (v1.1) — query another vault node over HTTP
+  # The remote vault must also be running vault_server.py
+  # You need a subscriber token from the remote vault operator
+  # - name: partner_defi_vault
+  #   url: http://partner.example.com:8766
+  #   token: vtok_subscriber_token_from_remote_operator
+  #   type: remote_vault
+  #   description: "Partner DeFi node — TVL, governance, yields"
+# Notes:
+# - personal vault memory stays private, never shared
+# - knowledge vaults are read-only (subscriber access)
+# - vault.query() checks personal → knowledge_vaults → VINN network in order
+# - personal vault always wins on conflicting data
+# - conflicts surfaced in also_found[] with source attribution
+# - remote HTTP vault querying: planned for v1.1

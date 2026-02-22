@@ -1,0 +1,61 @@
+{
+  "node_id": "inflectiv-ai-node",
+  "name": "Inflectiv AI Intelligence Node",
+  "vertical": "ai-models",
+  "version": "1.0.0",
+  "description": "Tracks AI model releases, benchmark scores, capability comparisons, pricing and API availability",
+  "emoji": "🤖",
+  "color": "#7c3aed",
+  "system_prompt": "You are the Inflectiv AI Intelligence Node — a specialised autonomous agent and expert in artificial intelligence research, model capabilities, and the AI development ecosystem.\n\nYou deeply understand: LLM architecture differences, benchmark methodologies (MMLU, HumanEval, MATH, HellaSwag, ARC, GSM8K), multimodal capabilities, context window implications, fine-tuning approaches, RLHF, Constitutional AI, open vs closed source tradeoffs, inference costs, and the competitive AI landscape.\n\nWhen researching, always:\n- Verify benchmark scores against original papers or official leaderboards\n- Note the benchmark date (models improve over time)\n- Distinguish between base models and instruction-tuned variants\n- Record API pricing in USD per million tokens (input and output separately)\n- Flag if model is open-source and note the license\n- Note multimodal capabilities (vision, audio, code, tool use)\n- Track which agent frameworks have native support\n\nPublish datasets that enable AI agents to make intelligent model selection decisions based on task requirements and budget.",
+  "sources": [
+    {"name": "HuggingFace Open LLM Leaderboard", "url": "https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard", "type": "primary", "trust_score": 0.97},
+    {"name": "Papers With Code", "url": "https://paperswithcode.com/sota", "type": "primary", "trust_score": 0.93},
+    {"name": "ArXiv AI", "url": "https://arxiv.org/list/cs.AI/recent", "type": "research", "trust_score": 0.9},
+    {"name": "Artificial Analysis", "url": "https://artificialanalysis.ai", "type": "benchmarks", "trust_score": 0.92},
+    {"name": "OpenRouter Models", "url": "https://openrouter.ai/models", "type": "pricing", "trust_score": 0.95},
+    {"name": "Anthropic Blog", "url": "https://www.anthropic.com/news", "type": "announcements", "trust_score": 0.98},
+    {"name": "OpenAI Blog", "url": "https://openai.com/blog", "type": "announcements", "trust_score": 0.98},
+    {"name": "Google DeepMind Blog", "url": "https://deepmind.google/blog", "type": "announcements", "trust_score": 0.98},
+    {"name": "Mistral Blog", "url": "https://mistral.ai/news", "type": "announcements", "trust_score": 0.97}
+  ],
+  "schema": {
+    "version": "ai_models_v1.3",
+    "required_fields": ["model_name", "provider", "release_date"],
+    "fields": {
+      "model_name": {"type": "string", "description": "Full model name"},
+      "provider": {"type": "string", "description": "Organization that created the model"},
+      "release_date": {"type": "string", "format": "YYYY-MM-DD"},
+      "model_family": {"type": "string", "description": "e.g. GPT-4, Claude 3, Gemini"},
+      "context_window": {"type": "integer", "description": "Max context in tokens"},
+      "benchmark_mmlu": {"type": "number", "min": 0, "max": 100},
+      "benchmark_humaneval": {"type": "number", "min": 0, "max": 100},
+      "benchmark_math": {"type": "number", "min": 0, "max": 100},
+      "multimodal": {"type": "boolean"},
+      "modalities": {"type": "array", "items": ["text", "vision", "audio", "code", "tool_use"]},
+      "open_source": {"type": "boolean"},
+      "license": {"type": "string"},
+      "api_available": {"type": "boolean"},
+      "price_input_per_1m": {"type": "number", "description": "USD per 1M input tokens"},
+      "price_output_per_1m": {"type": "number", "description": "USD per 1M output tokens"},
+      "openclaw_support": {"type": "boolean"},
+      "agent_frameworks": {"type": "array", "description": "Supported agent frameworks"}
+    }
+  },
+  "quality_checks": [
+    {"field": "release_date", "check": "within_months", "value": 18, "severity": "warning"},
+    {"field": "benchmark_mmlu", "check": "range", "min": 0, "max": 100, "severity": "error"},
+    {"field": "price_input_per_1m", "check": "gt", "value": 0, "severity": "info"}
+  ],
+  "refresh": {
+    "schedule": "0 8 * * *",
+    "description": "Daily at 08:00 UTC",
+    "min_records": 10,
+    "max_records": 100
+  },
+  "inai": {
+    "suggested_price": 0.001,
+    "access_model": "per_query",
+    "visibility": "public"
+  },
+  "tags": ["ai", "llm", "models", "benchmarks", "gpt", "claude", "gemini", "open-source"]
+}

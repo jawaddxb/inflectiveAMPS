@@ -1,0 +1,301 @@
+{
+  "meta": {
+    "title": "x402 Protocol: Comprehensive Innovation Dataset",
+    "description": "Structured intelligence on the x402 HTTP payment protocol \u2014 covering technical architecture, adopters, AI agent use cases, V2 features, and blockchain support. Scraped and structured by Inflectiv Agent Node.",
+    "version": "1.3.0",
+    "created_at": "2026-02-22T00:00:00Z",
+    "source_urls": [
+      "https://blockeden.xyz/blog/2025/10/26/x402-protocol-the-http-native-payment-standard-for-autonomous-ai-commerce/",
+      "https://www.fintechwrapup.com/p/deep-dive-is-x402-payments-protocol",
+      "https://learn.backpack.exchange/articles/what-is-x402",
+      "https://github.com/coinbase/x402",
+      "https://www.x402.org/"
+    ],
+    "tags": [
+      "x402",
+      "payments",
+      "AI agents",
+      "HTTP",
+      "stablecoin",
+      "Coinbase",
+      "micropayments",
+      "web3",
+      "autonomous agents"
+    ],
+    "last_refreshed": "2026-02-22T04:00:23.756559Z",
+    "refresh_count": 3,
+    "last_refresh_summary": "Added 2 new adopters, updated V2 status, refreshed adoption metrics"
+  },
+  "protocol_overview": {
+    "name": "x402",
+    "full_name": "HTTP 402 Payment Protocol",
+    "launched": "2025-05-01",
+    "developer": "Coinbase",
+    "license": "Open Source",
+    "github": "https://github.com/coinbase/x402",
+    "website": "https://www.x402.org",
+    "docs": "https://docs.cdp.coinbase.com/x402/welcome",
+    "current_version": "V2 (active development)",
+    "description": "An open-source payment protocol that revives the HTTP 402 'Payment Required' status code to enable instant stablecoin micropayments directly over HTTP. Enables AI agents, APIs, and applications to transact autonomously without accounts or manual intervention.",
+    "key_properties": [
+      "stateless",
+      "HTTP-native",
+      "developer-friendly",
+      "chain-agnostic",
+      "zero protocol fees"
+    ]
+  },
+  "technical_architecture": {
+    "components": [
+      {
+        "name": "Client",
+        "description": "AI agents, browsers, or applications making HTTP requests"
+      },
+      {
+        "name": "Resource Server",
+        "description": "HTTP server providing APIs or content, responds with 402"
+      },
+      {
+        "name": "Facilitator Server",
+        "description": "Third-party payment verification service (optional)"
+      },
+      {
+        "name": "Blockchain Settlement Layer",
+        "description": "On-chain settlement via stablecoins (default: USDC on Base)"
+      }
+    ],
+    "payment_flow": [
+      {
+        "step": 1,
+        "actor": "Client",
+        "action": "Sends HTTP request to resource server"
+      },
+      {
+        "step": 2,
+        "actor": "Resource Server",
+        "action": "Responds with HTTP 402 + payment instructions (amount, token, recipient, network)"
+      },
+      {
+        "step": 3,
+        "actor": "Client",
+        "action": "Constructs signed payment transaction in specified stablecoin"
+      },
+      {
+        "step": 4,
+        "actor": "Client",
+        "action": "Resends request with X-PAYMENT header containing signed transaction"
+      },
+      {
+        "step": 5,
+        "actor": "Facilitator/Server",
+        "action": "Verifies payment on-chain, responds with HTTP 200 OK + X-PAYMENT-RESPONSE header"
+      },
+      {
+        "step": 6,
+        "actor": "Resource Server",
+        "action": "Delivers requested resource"
+      }
+    ],
+    "round_trips": 1,
+    "headers_used": [
+      "X-PAYMENT",
+      "X-PAYMENT-RESPONSE"
+    ]
+  },
+  "blockchain_support": {
+    "primary_network": "Base (Coinbase L2)",
+    "primary_token": "USDC",
+    "supported_standards": [
+      "ERC-20 (EIP-3009) on any EVM chain",
+      "SPL tokens on Solana"
+    ],
+    "planned_support": [
+      "NEAR Protocol via NEAR intents",
+      "Traditional payments (credit card, bank)"
+    ],
+    "protocol_fees": 0.0,
+    "notes": "Designed to be chain-agnostic and eventually payment-rail agnostic"
+  },
+  "v2_improvements": [
+    {
+      "feature": "Clearer layer separation",
+      "description": "Better distinction between payment logic and application logic"
+    },
+    {
+      "feature": "Easier growth mechanisms",
+      "description": "Improved extensibility for new payment schemes and chains without breaking changes"
+    },
+    {
+      "feature": "Web-friendly design",
+      "description": "Resolves browser compatibility issues from V1"
+    },
+    {
+      "feature": "Smarter discovery",
+      "description": "AI agents auto-discover x402-enabled services without manual endpoint lists"
+    },
+    {
+      "feature": "Enhanced authentication",
+      "description": "Supports complex access control beyond simple payment gating"
+    },
+    {
+      "feature": "Better network support",
+      "description": "Improved compatibility across diverse blockchains and payment networks"
+    }
+  ],
+  "adopters": [
+    {
+      "name": "Coinbase",
+      "role": "Creator & developer",
+      "integration": "Reference implementations in TypeScript and Python",
+      "tier": "founder"
+    },
+    {
+      "name": "Cloudflare",
+      "role": "Co-founder of x402 Foundation",
+      "integration": "Agents SDK, MCP infrastructure, pay-per-crawl beta",
+      "tier": "founder"
+    },
+    {
+      "name": "Google",
+      "role": "Major adopter",
+      "integration": "x402 as crypto/stablecoin rail in Agent2Agent (A2A) and Agent Payments Protocol (AP2), backed by 60+ orgs",
+      "tier": "strategic"
+    },
+    {
+      "name": "Amazon Web Services",
+      "role": "Launch partner",
+      "integration": "Cloud infrastructure positioning",
+      "tier": "strategic"
+    },
+    {
+      "name": "Visa",
+      "role": "Announced support",
+      "integration": "x402 standard support (Oct 2025)",
+      "tier": "strategic"
+    },
+    {
+      "name": "PayPal",
+      "role": "Partner",
+      "integration": "PYUSD integration via Coinbase partnership",
+      "tier": "strategic"
+    },
+    {
+      "name": "Circle",
+      "role": "Foundation partner",
+      "integration": "USDC as primary settlement token",
+      "tier": "strategic"
+    },
+    {
+      "name": "Anthropic",
+      "role": "AI integration",
+      "integration": "MCP integration \u2014 Claude autonomously discovers and pays for services",
+      "tier": "ai"
+    },
+    {
+      "name": "Vercel",
+      "role": "Developer tools",
+      "integration": "x402-next middleware, x402-fetch wrapper",
+      "tier": "developer"
+    },
+    {
+      "name": "MetaMask",
+      "role": "Wallet support",
+      "integration": "Official support announced",
+      "tier": "wallet"
+    },
+    {
+      "name": "Bitget Wallet",
+      "role": "Wallet support",
+      "integration": "Official support",
+      "tier": "wallet"
+    },
+    {
+      "name": "NEAR Protocol",
+      "role": "Chain integration",
+      "integration": "NEAR intents compatibility",
+      "tier": "chain"
+    },
+    {
+      "name": "Apexti Toolbelt",
+      "role": "API marketplace",
+      "integration": "1,500+ Web3 APIs at ~$0.02/call via x402",
+      "tier": "ecosystem"
+    },
+    {
+      "name": "Daydreams Router",
+      "role": "LLM payments",
+      "integration": "Pay-per-inference for major LLM providers",
+      "tier": "ecosystem"
+    },
+    {
+      "name": "Payments MCP",
+      "role": "AI payments",
+      "integration": "Claude Desktop, Gemini, OpenAI Codex, Cherry Studio integration",
+      "tier": "ecosystem"
+    }
+  ],
+  "ai_agent_use_cases": [
+    {
+      "use_case": "API data access",
+      "example": "Agent pays $0.01 USDC to retrieve blockchain risk report (Circle Labs demo)",
+      "cost_range_usdc": "0.001-0.10"
+    },
+    {
+      "use_case": "Web3 API calls",
+      "example": "AI agent accesses 1,500+ Web3 APIs at $0.02 per call (Apexti)",
+      "cost_range_usdc": "0.01-0.05"
+    },
+    {
+      "use_case": "Pay-per-inference",
+      "example": "LLM inference payments via Daydreams Router across major providers",
+      "cost_range_usdc": "0.001-1.00"
+    },
+    {
+      "use_case": "Real-time data",
+      "example": "AI agents purchasing Grok 3 / X API insights (Boosty Labs demo)",
+      "cost_range_usdc": "0.01-0.50"
+    },
+    {
+      "use_case": "Paywalled content",
+      "example": "Agent autonomously pays for premium articles, reports, or datasets",
+      "cost_range_usdc": "0.01-5.00"
+    },
+    {
+      "use_case": "Compute access",
+      "example": "Autonomous payment for GPU compute time or cloud resources",
+      "cost_range_usdc": "0.01-10.00"
+    },
+    {
+      "use_case": "MCP tool access",
+      "example": "Claude discovers and pays for MCP tools dynamically (Anthropic integration)",
+      "cost_range_usdc": "0.001-0.10"
+    }
+  ],
+  "community_projects": [
+    {
+      "name": "X402scan",
+      "type": "Explorer",
+      "description": "Ecosystem explorer for x402 transactions"
+    },
+    {
+      "name": "Fluora (MonetizedMCP)",
+      "type": "Marketplace",
+      "description": "Marketplace for monetized MCP services"
+    },
+    {
+      "name": "BuffetPay",
+      "type": "Guardrails",
+      "description": "Smart payment guardrails for AI agents"
+    },
+    {
+      "name": "Payments MCP",
+      "type": "Integration",
+      "description": "On-device wallet + stablecoin payments for AI models, launched Oct 22 2025"
+    }
+  ],
+  "inflectiv_relevance": {
+    "synergy_score": 0.95,
+    "notes": "x402 is a natural payment rail for the Inflectiv $INAI economy. x402 micro-payments could power dataset access on the Inflectiv marketplace \u2014 agents pay per query using stablecoins, with $INAI as the native token. The Query-Before-Browse pattern in Inflectiv Agent Node maps directly onto x402's request-pay-receive flow.",
+    "integration_opportunity": "Replace $INAI internal billing with x402 on-chain micropayments for dataset access, enabling permissionless monetization without a centralized billing system."
+  }
+}

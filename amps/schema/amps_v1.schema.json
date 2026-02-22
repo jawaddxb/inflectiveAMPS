@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflectiv.ai/amps/schema/v1",
+  "title": "AMPS v1.0 \u2014 Agent Memory Portability Standard",
+  "description": "Schema for AMPS v1.0 agent memory export documents",
+  "type": "object",
+  "required": [
+    "amps_version",
+    "exported_at",
+    "agent_id",
+    "source_framework",
+    "migration_notes",
+    "memory",
+    "secrets",
+    "contributions"
+  ],
+  "properties": {
+    "amps_version": {
+      "type": "string",
+      "enum": [
+        "1.0"
+      ],
+      "description": "AMPS schema version"
+    },
+    "exported_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 export timestamp"
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Framework-specific agent identifier"
+    },
+    "source_framework": {
+      "type": "string",
+      "enum": [
+        "agent_zero",
+        "autogpt",
+        "crewai",
+        "langgraph",
+        "llamaindex",
+        "custom"
+      ],
+      "description": "Originating framework"
+    },
+    "migration_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Notes on data that did not map cleanly during export"
+    },
+    "memory": {
+      "type": "object",
+      "required": [
+        "long_term",
+        "identity"
+      ],
+      "properties": {
+        "long_term": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Markdown \u2014 persistent knowledge, facts, learned context"
+        },
+        "identity": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Markdown \u2014 agent personality, values, operating style"
+        },
+        "active_plan": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Markdown \u2014 current tasks and goals"
+        }
+      },
+      "additionalProperties": false
+    },
+    "secrets": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "MUST always be empty \u2014 credentials are never exported"
+    },
+    "knowledge_subscriptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Vault names or URLs \u2014 pointers only, never vault contents"
+    },
+    "contributions": {
+      "type": "object",
+      "properties": {
+        "total_items": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "quality_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "network_earnings": {
+          "type": "number",
+          "minimum": 0
+        },
+        "first_contribution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last_contribution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

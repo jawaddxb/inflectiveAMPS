@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  vault:
+    build:
+      context: .
+      dockerfile: Dockerfile.vault
+    container_name: inflectiv-vault
+    ports:
+      - "8766:8766"
+    environment:
+      - VAULT_ROOT=/vault
+      - VAULT_MASTER_PASSWORD=${VAULT_MASTER_PASSWORD:-changeme}
+      - VAULT_PORT=8766
+      - VAULT_ENV=${VAULT_ENV:-production}
+      - VAULT_KNOWLEDGE_PATH=/vault/knowledge_vaults
+      - VAULTS_CONFIG=${VAULTS_CONFIG:-}
+      - INFLECTIV_API_KEY=${INFLECTIV_API_KEY:-}
+    volumes:
+      - vault_data:/vault
+      - ./vault/knowledge_vaults:/vault/knowledge_vaults:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8766/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  vault_data:

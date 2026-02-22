@@ -1,0 +1,58 @@
+version: '3.9'
+
+# Inflectiv VINN — Multi-node deployment
+# Run all verticals: docker compose -f docker-compose.nodes.yml up -d
+# Run one vertical:  docker compose -f docker-compose.nodes.yml up -d defi-node
+
+x-node-base: &node-base
+  image: inflectiv/node:latest
+  build:
+    context: .
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  volumes:
+    - node-data:/data
+  env_file:
+    - .env
+
+services:
+
+  defi-node:
+    <<: *node-base
+    container_name: inflectiv-defi-node
+    environment:
+      PROFILE: defi
+    labels:
+      inflectiv.vertical: defi
+      inflectiv.refresh: hourly
+
+  ai-node:
+    <<: *node-base
+    container_name: inflectiv-ai-node
+    environment:
+      PROFILE: ai-models
+    labels:
+      inflectiv.vertical: ai-models
+      inflectiv.refresh: daily
+
+  crypto-news-node:
+    <<: *node-base
+    container_name: inflectiv-crypto-news-node
+    environment:
+      PROFILE: crypto-news
+    labels:
+      inflectiv.vertical: crypto-news
+      inflectiv.refresh: hourly
+
+  leaderboard:
+    <<: *node-base
+    container_name: inflectiv-leaderboard
+    command: leaderboard
+    ports:
+      - "8080:8080"
+    environment:
+      SERVE_LEADERBOARD: "true"
+
+volumes:
+  node-data:
+    driver: local

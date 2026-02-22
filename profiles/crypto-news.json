@@ -1,0 +1,58 @@
+{
+  "node_id": "inflectiv-crypto-news-node",
+  "name": "Inflectiv Crypto News Intelligence Node",
+  "vertical": "crypto-news",
+  "version": "1.0.0",
+  "description": "Structured crypto news with sentiment scoring, entity extraction, and market impact classification",
+  "emoji": "📰",
+  "color": "#e8985d",
+  "system_prompt": "You are the Inflectiv Crypto News Intelligence Node — a specialised autonomous agent expert in cryptocurrency markets, blockchain ecosystems, and financial news analysis.\n\nYou deeply understand: market microstructure, on-chain analytics, regulatory environments across jurisdictions, tokenomics and vesting schedules, exchange dynamics, whale behaviour, narrative cycles, and the relationship between news events and price action.\n\nWhen processing news, always:\n- Score sentiment from -1.0 (very bearish) to +1.0 (very bullish) based on content, not just headlines\n- Extract all entities mentioned: tokens, protocols, companies, people, regulatory bodies\n- Classify impact: price_action, regulatory, technical, adoption, partnership, security, macro\n- Assess which chains are affected\n- Flag breaking news vs analysis vs opinion\n- Note source credibility tier (tier1=CoinDesk/TheBlock, tier2=Decrypt/Cointelegraph, tier3=community)\n- Identify if news is FUD, shill, or objective\n\nPublish datasets that give trading agents, portfolio managers and narrative analysts an immediate structured view of the crypto news landscape.",
+  "sources": [
+    {"name": "CoinDesk", "url": "https://www.coindesk.com", "type": "tier1", "trust_score": 0.9},
+    {"name": "The Block", "url": "https://www.theblock.co", "type": "tier1", "trust_score": 0.92},
+    {"name": "Decrypt", "url": "https://decrypt.co", "type": "tier2", "trust_score": 0.85},
+    {"name": "Cointelegraph", "url": "https://cointelegraph.com", "type": "tier2", "trust_score": 0.82},
+    {"name": "CryptoSlate", "url": "https://cryptoslate.com", "type": "tier2", "trust_score": 0.8},
+    {"name": "DLNews", "url": "https://www.dlnews.com", "type": "tier1", "trust_score": 0.91},
+    {"name": "Blockworks", "url": "https://blockworks.co", "type": "tier1", "trust_score": 0.89}
+  ],
+  "schema": {
+    "version": "crypto_news_v1.2",
+    "required_fields": ["headline", "source", "published_at", "sentiment_score"],
+    "fields": {
+      "headline": {"type": "string"},
+      "source": {"type": "string"},
+      "source_tier": {"type": "string", "enum": ["tier1", "tier2", "tier3"]},
+      "published_at": {"type": "string", "format": "ISO8601"},
+      "url": {"type": "string"},
+      "summary": {"type": "string", "max_length": 500},
+      "sentiment_score": {"type": "number", "min": -1.0, "max": 1.0},
+      "sentiment_label": {"type": "string", "enum": ["very_bearish", "bearish", "neutral", "bullish", "very_bullish"]},
+      "entities_tokens": {"type": "array", "description": "Token symbols mentioned: BTC, ETH etc"},
+      "entities_protocols": {"type": "array"},
+      "entities_companies": {"type": "array"},
+      "entities_people": {"type": "array"},
+      "impact_type": {"type": "string", "enum": ["price_action", "regulatory", "technical", "adoption", "partnership", "security", "macro", "other"]},
+      "affected_chains": {"type": "array"},
+      "article_type": {"type": "string", "enum": ["breaking", "analysis", "opinion", "report", "announcement"]},
+      "credibility_flag": {"type": "string", "enum": ["objective", "fud", "shill", "uncertain"]}
+    }
+  },
+  "quality_checks": [
+    {"field": "sentiment_score", "check": "range", "min": -1.0, "max": 1.0, "severity": "error"},
+    {"field": "published_at", "check": "within_hours", "value": 48, "severity": "warning"},
+    {"field": "source", "check": "in_whitelist", "severity": "warning"}
+  ],
+  "refresh": {
+    "schedule": "0 * * * *",
+    "description": "Hourly",
+    "min_records": 10,
+    "max_records": 50
+  },
+  "inai": {
+    "suggested_price": 0.003,
+    "access_model": "per_query",
+    "visibility": "public"
+  },
+  "tags": ["crypto", "news", "sentiment", "bitcoin", "ethereum", "defi", "nft", "trading"]
+}

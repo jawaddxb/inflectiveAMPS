@@ -1,0 +1,54 @@
+{
+  "living_datasets": [
+    {
+      "id": "ld_001",
+      "topic_id": "topic_001",
+      "title": "x402 Protocol: Innovation Intelligence Dataset",
+      "dataset_id": "ds_demo_04165",
+      "version": 3,
+      "last_refreshed": "2026-02-22T04:00:23.756559Z",
+      "next_refresh": "2026-02-23T04:00:23.756559Z",
+      "refresh_count": 3,
+      "query_count": 0,
+      "inai_earned": 0.0,
+      "freshness_score": 1.0,
+      "status": "active",
+      "file_path": "/a0/usr/workdir/inflectiv-agent-node/x402_innovation_dataset.json",
+      "changelog": [
+        {
+          "version": 1,
+          "date": "2026-02-22T00:00:00Z",
+          "summary": "Initial dataset created \u2014 15 adopters, 7 AI use cases, full technical architecture"
+        },
+        {
+          "version": 2,
+          "date": "2026-02-21T20:15:28.443245Z",
+          "summary": "Added 2 new adopters, updated V2 status, refreshed adoption metrics"
+        },
+        {
+          "version": 3,
+          "date": "2026-02-22T04:00:23.756559Z",
+          "summary": "Added 2 new adopters, updated V2 status, refreshed adoption metrics"
+        }
+      ],
+      "refresh_schedule": "daily"
+    },
+    {
+      "id": "ld_002",
+      "topic_id": "topic_002",
+      "title": "Inflectiv Ai Data Marketplace And Inai Token Ecosystem \u2014 Living Dataset",
+      "dataset_id": null,
+      "version": 0,
+      "last_refreshed": "2026-02-21T20:15:21.669932Z",
+      "next_refresh": "2026-02-22T20:15:21.669963Z",
+      "refresh_schedule": "daily",
+      "refresh_count": 0,
+      "query_count": 0,
+      "inai_earned": 0.0,
+      "freshness_score": 1.0,
+      "status": "pending_first_run",
+      "file_path": null,
+      "changelog": []
+    }
+  ]
+}

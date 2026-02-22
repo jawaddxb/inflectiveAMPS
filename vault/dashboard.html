@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inflectiv Vault — Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           background: #0a0a0f; color: #e0e0e0; min-height: 100vh; padding: 24px; }
+    .header { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+    .logo { width: 36px; height: 36px; background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; }
+    h1 { font-size: 22px; font-weight: 600; }
+    h1 span { color: #00d4ff; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px; margin-bottom: 24px; }
+    .card { background: #13131a; border: 1px solid #2a2a3a; border-radius: 12px; padding: 20px; }
+    .card-label { font-size: 12px; color: #888; text-transform: uppercase;
+                  letter-spacing: 1px; margin-bottom: 8px; }
+    .card-value { font-size: 28px; font-weight: 700; }
+    .card-value.green { color: #4CAF50; }
+    .card-value.blue  { color: #00d4ff; }
+    .card-value.purple{ color: #ce93d8; }
+    .card-sub { font-size: 12px; color: #666; margin-top: 4px; }
+    .ratio-section { background: #13131a; border: 1px solid #2a2a3a;
+                     border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .ratio-header { display: flex; justify-content: space-between;
+                    align-items: center; margin-bottom: 16px; }
+    .ratio-title { font-size: 16px; font-weight: 600; }
+    .tier-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .bar-track { background: #1e1e2e; border-radius: 8px; height: 12px;
+                 overflow: hidden; margin-bottom: 8px; }
+    .bar-fill  { height: 100%; border-radius: 8px;
+                 background: linear-gradient(90deg, #7b2ff7, #00d4ff); }
+    .bar-labels{ display: flex; justify-content: space-between;
+                 font-size: 11px; color: #666; }
+    .grace-banner { border-radius: 8px; padding: 12px 16px;
+                    margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+    .inai-section { background: linear-gradient(135deg, #13131a, #1a1025);
+                    border: 1px solid #7b2ff733; border-radius: 12px;
+                    padding: 24px; margin-bottom: 24px; }
+    .inai-title { font-size: 14px; color: #9c84c7; margin-bottom: 16px;
+                  font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .inai-row { display: flex; justify-content: space-between; align-items: center;
+                padding: 10px 0; border-bottom: 1px solid #2a2a3a; }
+    .inai-row:last-child { border-bottom: none; }
+    .inai-label { font-size: 14px; color: #aaa; }
+    .inai-amount { font-size: 18px; font-weight: 700; color: #b39ddb; }
+    .inai-amount.earned { color: #ce93d8; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600;
+           cursor: pointer; border: none; text-decoration: none; display: inline-block; }
+    .btn-primary { background: linear-gradient(135deg, #7b2ff7, #00d4ff); color: white; }
+    .btn-secondary { background: #1e1e2e; color: #aaa; border: 1px solid #2a2a3a; }
+    .footer { margin-top: 32px; text-align: center; font-size: 12px; color: #444; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">&#9889;</div>
+    <div>
+      <h1>Inflectiv <span>Vault</span></h1>
+      <div style="font-size:12px;color:#666;">Intelligence Node Dashboard</div>
+    </div>
+  </div>
+
+  <div class="grace-banner" style="background:GRACE_BG;border:1px solid GRACE_BORDER;">
+    <span style="font-size:20px;">GRACE_ICON</span>
+    <div style="font-size:14px;color:#aaa;">GRACE_MESSAGE</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-label">Queries Made</div>
+      <div class="card-value blue">STAT_QUERIES</div>
+      <div class="card-sub">Network intelligence requests</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Contributions Approved</div>
+      <div class="card-value green">STAT_APPROVED</div>
+      <div class="card-sub">STAT_STAGED staged, awaiting review</div>
+    </div>
+    <div class="card">
+      <div class="card-label">$INAI Earned</div>
+      <div class="card-value purple">STAT_INAI_EARNED</div>
+      <div class="card-sub">STAT_INAI_PENDING pending confirmation</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Access Tier</div>
+      <div class="card-value" style="color:TIER_COLOR;font-size:20px;padding-top:4px;">STAT_TIER</div>
+      <div class="card-sub">TIER_DESC</div>
+    </div>
+  </div>
+
+  <div class="ratio-section">
+    <div class="ratio-header">
+      <div class="ratio-title">Contribution Ratio</div>
+      <div class="tier-badge" style="background:TIER_BG;color:TIER_COLOR;border:1px solid TIER_BORDER;">STAT_TIER</div>
+    </div>
+    <div class="bar-track">
+      <div class="bar-fill" style="width:RATIO_PCT%;"></div>
+    </div>
+    <div class="bar-labels">
+      <span>STAT_RATIO current</span>
+      <span>0.20 target</span>
+    </div>
+    <p style="font-size:13px;color:#666;margin-top:12px;">
+      STAT_APPROVED approved contributions / STAT_QUERIES queries = STAT_RATIO ratio.
+      Target: 1 contribution per 5 queries (0.20). Minimum: 0.05.
+    </p>
+  </div>
+
+  <div class="inai-section">
+    <div class="inai-title">$INAI Earnings</div>
+    <div class="inai-row">
+      <span class="inai-label">Confirmed earnings</span>
+      <span class="inai-amount earned">STAT_INAI_EARNED $INAI</span>
+    </div>
+    <div class="inai-row">
+      <span class="inai-label">Pending (awaiting VINN confirmation)</span>
+      <span class="inai-amount">STAT_INAI_PENDING $INAI</span>
+    </div>
+    <div class="inai-row">
+      <span class="inai-label">Per approved contribution</span>
+      <span class="inai-amount">0.5000 $INAI</span>
+    </div>
+    <div class="inai-row">
+      <span class="inai-label">Total (confirmed + pending)</span>
+      <span class="inai-amount earned">STAT_INAI_TOTAL $INAI</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a href="/ui/approve" class="btn btn-primary">Review Staged Contributions</a>
+    <a href="/vault/stats" class="btn btn-secondary">Raw Stats JSON</a>
+    <a href="/health" class="btn btn-secondary">Vault Health</a>
+  </div>
+
+  <div class="footer">
+    Inflectiv Vault v1.0.0 &mdash;
+    Local-first intelligence. Your agent&#39;s brain stays on your hardware.
+  </div>
+</body>
+</html>

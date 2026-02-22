@@ -1,0 +1,11 @@
+.git
+.env
+*.pyc
+__pycache__
+*.log
+*.json.bak
+venv/
+.venv/
+node_modules/
+*.md
+brand-assets/

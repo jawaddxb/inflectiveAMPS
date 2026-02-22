@@ -1,0 +1,47 @@
+{
+  "user": {
+    "wallet": "",
+    "notification_email": "",
+    "created_at": "2026-02-22T00:00:00Z"
+  },
+  "interests": [
+    {
+      "id": "topic_001",
+      "topic": "x402 HTTP payment protocol and AI agent payments",
+      "keywords": [
+        "x402",
+        "HTTP payments",
+        "AI agents",
+        "stablecoin micropayments",
+        "Coinbase payments"
+      ],
+      "sources": [
+        "https://www.x402.org",
+        "https://github.com/coinbase/x402",
+        "https://docs.cdp.coinbase.com/x402/welcome"
+      ],
+      "refresh_schedule": "daily",
+      "dataset_id": "ds_demo_04165",
+      "visibility": "public",
+      "price_inai": 0.0,
+      "active": true
+    },
+    {
+      "id": "topic_002",
+      "topic": "Inflectiv AI data marketplace and INAI token ecosystem",
+      "keywords": [
+        "Inflectiv",
+        "AI",
+        "data",
+        "marketplace",
+        "and"
+      ],
+      "sources": [],
+      "refresh_schedule": "daily",
+      "dataset_id": null,
+      "visibility": "public",
+      "price_inai": 0.0,
+      "active": true
+    }
+  ]
+}
