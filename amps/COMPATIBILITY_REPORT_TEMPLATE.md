@@ -21,7 +21,8 @@ agent memory through export → import cycles.
 
 | Framework | Export Score | Import Score | AMPS Score | Adapter Version | Notes |
 |---|---|---|---|---|---|
-| Agent Zero (native) | 100% | 100% | **100** | v1.0 | Reference implementation — lossless |
+| OpenClaw (native) | 100% | 100% | **100** | v1.0 | Reference implementation — lossless |
+| Agent Zero | 100% | 100% | **100** | v1.0 | Lossless (vault-backed) |
 | AutoGPT | ?% | ?% | **?** | v1.0 | Memory summaries + role/goals |
 | CrewAI | ?% | ?% | **?** | v1.0 | Backstory + task outputs |
 | LangGraph | ?% | ?% | **?** | v1.0 | Checkpoint text nodes |

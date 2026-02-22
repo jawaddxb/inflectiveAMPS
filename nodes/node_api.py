@@ -24,6 +24,7 @@ import asyncio
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Any
+from threading import Lock
 
 from fastapi import FastAPI, HTTPException, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -88,6 +89,7 @@ class NodeState:
         self.query_count = 0
         self.inai_earned = 0.0
         self.sessions: dict[str, list] = {}  # session_id -> message history
+        self._session_lock = Lock()
 
     def _load_profile(self) -> dict:
         p = PROFILES_DIR / f"{self.profile_id}.json"
@@ -145,9 +147,10 @@ class NodeState:
             try:
                 data = json.loads(json_file.read_text())
                 meta = data.get("meta", {})
-                if self.profile_id in json_file.name or True:  # search all
-                    dataset_id = meta.get("dataset_id", json_file.stem)
-                    freshness = meta.get("generated_at", "unknown")
+                if self.profile_id in json_file.name:
+                    if dataset_id is None:
+                        dataset_id = meta.get("dataset_id", json_file.stem)
+                    freshness = meta.get("generated_at", freshness)
                     # Try 'data' key first, then flatten all top-level lists
                     records = data.get("data", None)
                     if isinstance(records, list) and records:
@@ -166,8 +169,9 @@ class NodeState:
                             elif isinstance(v, dict):
                                 # Convert single dict to record
                                 all_records.append({"section": k, **v})
-            except Exception:
-                pass
+            except Exception as e:
+                import sys
+                print(f"[node] Error loading dataset {json_file}: {e}", file=sys.stderr)
 
         # Load connector registry datasets
         reg_path = CONNECTOR_DIR / "registry.json"
@@ -177,8 +181,9 @@ class NodeState:
                 for ds_id, ds in reg.get("datasets", {}).items():
                     dataset_id = ds_id
                     freshness = ds.get("last_updated", "unknown")
-            except Exception:
-                pass
+            except Exception as e:
+                import sys
+                print(f"[node] Error loading connector registry: {e}", file=sys.stderr)
 
         if not all_records:
             return (
@@ -232,7 +237,7 @@ class NodeState:
 def create_app(profile_id: str) -> FastAPI:
     node = NodeState(profile_id)
     profile = node.profile
-    price_per_query = float(profile.get("price_per_query", 0.001))
+    price_per_query = float(profile.get("inai", {}).get("suggested_price", 0.001))
 
     app = FastAPI(
         title=f"Inflectiv {profile.get('name','Node')}",
@@ -417,7 +422,7 @@ def create_app(profile_id: str) -> FastAPI:
 
         # Extract message text
         message_text = ""
-        session_id = params.get("sessionId") or params.get("id") or str(uuid.uuid4())
+        session_id = params.get("sessionId") or str(uuid.uuid4())
 
         msg = params.get("message", {})
         if isinstance(msg, dict):
@@ -431,18 +436,19 @@ def create_app(profile_id: str) -> FastAPI:
         if not message_text:
             message_text = params.get("text", str(params))
 
-        # Maintain session history
-        if session_id not in node.sessions:
-            node.sessions[session_id] = []
-        node.sessions[session_id].append({"role": "user", "text": message_text})
+        # Maintain session history (thread-safe)
+        with node._session_lock:
+            if session_id not in node.sessions:
+                node.sessions[session_id] = []
+            node.sessions[session_id].append({"role": "user", "text": message_text})
 
-        # Build context from session history for better responses
-        history_ctx = ""
-        if len(node.sessions[session_id]) > 1:
-            prev = node.sessions[session_id][-3:-1]  # last 2 exchanges
-            history_ctx = "Previous context: " + " | ".join(
-                f"{m['role']}: {m['text'][:100]}" for m in prev
-            ) + "\n\n"
+            # Build context from session history for better responses
+            history_ctx = ""
+            if len(node.sessions[session_id]) > 1:
+                prev = node.sessions[session_id][-3:-1]  # last 2 exchanges
+                history_ctx = "Previous context: " + " | ".join(
+                    f"{m['role']}: {m['text'][:100]}" for m in prev
+                ) + "\n\n"
 
         # Query the node's datasets
         answer, records_scanned, ds_id = node.search_datasets(message_text)
@@ -459,7 +465,8 @@ def create_app(profile_id: str) -> FastAPI:
             f"Node: `{node.node_id}`*"
         )
 
-        node.sessions[session_id].append({"role": "assistant", "text": full_response})
+        with node._session_lock:
+            node.sessions[session_id].append({"role": "assistant", "text": full_response})
 
         # FastA2A v0.2 response format
         task_id = str(uuid.uuid4())

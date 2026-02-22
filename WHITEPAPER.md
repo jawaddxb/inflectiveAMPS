@@ -36,7 +36,7 @@ vote outcomes, model pricing tables — is inherently structured. Yet it lives i
 unindexed chat histories, temporary files, and markdown dumps nobody shares.
 
 ### 1.3 No Standard Memory Layer
-Agent frameworks (Agent Zero, AutoGPT, CrewAI, LangGraph) each implement their
+Agent frameworks (Agent Zero, AutoGPT, CrewAI, LangGraph, OpenClaw) each implement their
 own ad-hoc memory. There is no portable, secure, cross-framework standard for:
 - Encrypted credential storage
 - Versioned knowledge persistence
@@ -134,7 +134,18 @@ a self-reinforcing quality incentive: better data → more queries → more earn
         └─────────────────────────── Network gets richer ↑
 ```
 
-### 3.3 Conflict Resolution
+### 3.3 Living Datasets
+
+Living Datasets are interest-based, auto-refreshing datasets managed via the connector
+subsystem (`connector/manager.py`). Operators subscribe to a topic and schedule
+(hourly, daily, weekly); the refresh engine (`connector/refresh_task.py`) runs the
+full research → structure → contribute cycle automatically.
+
+Each dataset tracks its own freshness score, version history, and query/earnings
+metrics in `connector/registry.json`. Results feed directly into the vault
+contribution pipeline (§3.2).
+
+### 3.4 Conflict Resolution
 When two vaults return conflicting data for the same query:
 
 ```json
@@ -152,7 +163,7 @@ When two vaults return conflicting data for the same query:
 Primary result = most recent. Conflicts surfaced in `also_found[]` with full
 source attribution. Never silently discarded.
 
-### 3.4 Security Model
+### 3.5 Security Model
 
 | Concern | Implementation |
 |---|---|
@@ -256,6 +267,14 @@ The vault server speaks **FastA2A v0.2**, enabling agent-to-vault and
 vault-to-vault queries across the OpenClaw mesh network. Any A2A-compatible
 agent can query an Inflectiv Vault node without SDK installation.
 
+### 5.4 AMPS Export/Import for OpenClaw Agents
+OpenClaw / Inflectiv Vault is the AMPS reference implementation — the native,
+lossless adapter against which all other framework adapters are validated.
+OpenClaw agents export vault memory (`MEMORY.md`, `SOUL.md`, `task_plan.md`)
+directly into portable `.amps.json` documents with zero migration notes.
+This enables OpenClaw agents to migrate memory to other frameworks (and vice
+versa) with guaranteed lossless round-trip fidelity.
+
 ---
 
 ## 6. Roadmap
@@ -266,7 +285,7 @@ agent can query an Inflectiv Vault node without SDK installation.
 | **v1.0.1** | ✅ Built | Audit fixes: dashboard, Docker paths, grace period, security guards, SDK completion |
 | **v1.1** | ✅ Built | Flywheel: node_launcher + refresh_task → vault.contribute(); remote HTTP vault-to-vault queries |
 | **v1.2** | 🔵 Planned | Walrus (Sui) decentralised vault backup; on-chain $INAI contribution receipts |
-| **v2.0** | 🔵 Planned | Agent Memory Portability Standard (AMPS); cross-framework import/export; public node index API |
+| **v2.0** | ✅ Built | Agent Memory Portability Standard (AMPS); cross-framework import/export (incl. OpenClaw adapter); public node index API |
 | **v2.1** | 🔵 Planned | Vault federation protocol; automatic peer discovery; mesh-mode query routing |
 
 ---

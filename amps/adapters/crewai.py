@@ -48,6 +48,7 @@ class CrewAIAdapter(AMPSAdapter):
         doc["memory"]["identity"]  = ("# CrewAI Agent Identities" + NL2 + NL2.join(id_parts)) if id_parts else None
         doc["memory"]["long_term"] = ("# Task Knowledge" + NL2 + NL2.join(lt)) if lt else "# Agent Memory" + NL2 + "(empty)"
         doc["migration_notes"] = notes
+        doc['secrets'] = []  # Enforce: secrets NEVER exported — AMPS spec §2.1
         return doc
     def import_amps(self, amps_doc, **kwargs):
         applied, warnings = [], []
@@ -70,6 +71,4 @@ class CrewAIAdapter(AMPSAdapter):
         applied.append("backstory_extension ready (" + str(len(backstory_extension)) + " chars)")
         applied.append("agent_memory dict ready")
         return {"ok": True, "source_framework": source, "amps_version": ver,
-                "backstory_extension": backstory_extension, "agent_memory": agent_memory,
-                "raw_identity": identity, "applied": applied,
-                "migration_notes": notes, "warnings": warnings}
+                "applied": applied, "migration_notes": notes, "warnings": warnings}

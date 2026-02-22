@@ -9,11 +9,12 @@ services:
       - "8766:8766"
     environment:
       - VAULT_ROOT=/vault
-      - VAULT_MASTER_PASSWORD=${VAULT_MASTER_PASSWORD:-changeme}
+      - VAULT_MASTER_PASSWORD=${VAULT_MASTER_PASSWORD:?Set VAULT_MASTER_PASSWORD in .env}
       - VAULT_PORT=8766
       - VAULT_ENV=${VAULT_ENV:-production}
       - VAULT_KNOWLEDGE_PATH=/vault/knowledge_vaults
       - VAULTS_CONFIG=${VAULTS_CONFIG:-}
+      - VAULT_TOKEN=${VAULT_TOKEN:-}        # Owner token — printed on first startup
       - INFLECTIV_API_KEY=${INFLECTIV_API_KEY:-}
     volumes:
       - vault_data:/vault

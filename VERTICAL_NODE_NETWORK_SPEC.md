@@ -3,7 +3,7 @@
 
 **Version:** 1.0.0  
 **Date:** February 2026  
-**Status:** Proposal — For Review by Inflectiv & OpenClaw Foundation  
+**Status:** Specification — Partially Operational
 
 ---
 
@@ -13,7 +13,7 @@ The Inflectiv Vertical Intelligence Node Network (VINN) is a proposed expansion 
 
 Think of it as **Chainlink for structured intelligence**: where Chainlink created a network of price feed oracles that earn LINK, VINN creates a network of intelligence feed nodes that earn $INAI.
 
-This proposal defines the technical architecture, economic model, node profiles, and integration strategy for VINN, with a specific focus on:
+This specification defines the technical architecture, economic model, node profiles, and integration strategy for VINN, with a specific focus on:
 
 1. **Inflectiv** — as the marketplace and $INAI token issuer
 2. **OpenClaw Foundation** — as the primary agent framework consumer
@@ -168,7 +168,8 @@ Hit found           No hit found
    │                    │
    ▼                    ▼
 Return structured   Browse web + structure
-dataset instantly   + publish to VINN
+dataset instantly   + publish to VINN (via Inflectiv API)
+                    + contribute to vault (via vault API)
                     + earn $INAI
    │                    │
    └────────────────────┘

@@ -28,6 +28,7 @@ class KeyStore:
             salt = secrets.token_bytes(32)
             with open(salt_path, "wb") as f:
                 f.write(salt)
+            os.chmod(salt_path, 0o600)
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
@@ -53,6 +54,7 @@ class KeyStore:
         })
         with open(self._secret_path(name), "w") as f:
             f.write(payload)
+        os.chmod(self._secret_path(name), 0o600)
 
     def retrieve(self, name: str) -> Optional[str]:
         """Decrypt and return a secret value"""
@@ -66,7 +68,9 @@ class KeyStore:
         ct = base64.b64decode(payload["ciphertext"])
         try:
             return aesgcm.decrypt(nonce, ct, name.encode()).decode()
-        except Exception:
+        except Exception as e:
+            import sys
+            print(f"[vault] Failed to decrypt secret '{name}': {e}", file=sys.stderr)
             return None
 
     def delete(self, name: str) -> bool:

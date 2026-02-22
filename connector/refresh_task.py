@@ -22,7 +22,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 BASE_DIR       = Path(__file__).parent
@@ -112,8 +112,8 @@ def refresh_dataset(ld_id: str, demo: bool = False, api_key: str = None):
     print(f"  Mode:    {'DEMO' if demo else 'LIVE'}")
     print(f"{'═'*60}")
 
-    now = datetime.utcnow()
-    next_run = (now + SCHEDULE_MAP.get(schedule, timedelta(days=1))).isoformat() + "Z"
+    now = datetime.now(timezone.utc)
+    next_run = (now + SCHEDULE_MAP.get(schedule, timedelta(days=1))).isoformat()
 
     # ── Step 1: Re-query Inflectiv to check if dataset was already updated ──
     print("\n[1/4] 🔍 Query-Before-Refresh: checking Inflectiv for newer data...")
@@ -131,7 +131,7 @@ def refresh_dataset(ld_id: str, demo: bool = False, api_key: str = None):
             "refresh_note": f"Refresh v{target['version']+1} — automated update",
             "new_adopters_found": 2,
             "changelog_summary": f"Added 2 new adopters, updated V2 status, refreshed adoption metrics",
-            "timestamp": now.isoformat() + "Z"
+            "timestamp": now.isoformat()
         }
         print(f"  ✅ Found updates: {new_findings['changelog_summary']}")
     else:
@@ -145,7 +145,7 @@ def refresh_dataset(ld_id: str, demo: bool = False, api_key: str = None):
     if file_path and Path(file_path).exists():
         existing = load_json(Path(file_path))
         existing["meta"]["version"] = f"1.{target['version']+1}.0"
-        existing["meta"]["last_refreshed"] = now.isoformat() + "Z"
+        existing["meta"]["last_refreshed"] = now.isoformat()
         existing["meta"]["refresh_count"] = target["refresh_count"] + 1
         if demo:
             existing["meta"]["last_refresh_summary"] = new_findings["changelog_summary"]
@@ -179,14 +179,14 @@ def refresh_dataset(ld_id: str, demo: bool = False, api_key: str = None):
     for d in registry["living_datasets"]:
         if d["id"] == ld_id:
             d["version"]       += 1
-            d["last_refreshed"]  = now.isoformat() + "Z"
+            d["last_refreshed"]  = now.isoformat()
             d["next_refresh"]    = next_run
             d["refresh_count"]  += 1
             d["freshness_score"] = 1.0
             d["status"]          = "active"
             d["changelog"].append({
                 "version": d["version"],
-                "date":    now.isoformat() + "Z",
+                "date":    now.isoformat(),
                 "summary": new_findings.get("changelog_summary", "Refreshed")
             })
             break
@@ -224,7 +224,7 @@ def main():
 
     if args.all:
         registry = load_json(REGISTRY_FILE)
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         due = []
         for d in registry.get("living_datasets", []):
             try:

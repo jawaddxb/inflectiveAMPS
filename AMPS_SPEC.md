@@ -4,7 +4,7 @@
 **License:** MIT  
 **Maintainer:** Inflectiv / OpenClaw Foundation  
 **Status:** Draft — February 2026  
-**Reference Implementation:** Inflectiv Vault
+**Reference Implementation:** OpenClaw / Inflectiv Vault
 
 ---
 
@@ -19,7 +19,7 @@ snapshot of an agent's intelligence: what it knows, who it is, what it is doing,
 and what it has contributed to the network.
 
 **Lossiness contract:**
-- Between AMPS-native implementations: **lossless**
+- Between AMPS-native implementations (OpenClaw, Agent Zero): **lossless**
 - For framework-specific imports: **best-effort** — adapters preserve as much
   as possible and write `migration_notes` for anything that doesn't map cleanly
 
@@ -76,13 +76,14 @@ This is a massive improvement over the current baseline of zero portability.
 | `migration_notes` | ✅ | string[] | Notes on data that didn't map cleanly. `[]` for clean exports |
 | `memory.long_term` | ✅ | Markdown | Persistent knowledge, facts, learned context |
 | `memory.identity` | ✅ | Markdown | Agent personality, values, operating style |
-| `memory.active_plan` | ⬜ | Markdown\|null | Current tasks and goals |
+| `memory.active_plan` | ⬜ | Markdown\|null | Current tasks and goals. Note: non-native adapters rarely populate this field |
 | `secrets` | ✅ | always `[]` | Credentials are **never exported** — field exists to make omission explicit |
 | `knowledge_subscriptions` | ⬜ | string[] | Vault names/URLs agent was subscribed to. Pointer only |
+| `contributions` | ✅ | object | Contribution history (required; initialized by `empty_amps()`) |
 | `contributions.total_items` | ⬜ | int | Total approved contributions to the network |
 | `contributions.categories` | ⬜ | string[] | Category labels (e.g. `defi_governance`) |
 | `contributions.quality_score` | ⬜ | float 0–1 | Mean quality score across contributions |
-| `contributions.network_earnings` | ⬜ | float | Cumulative $INAI earned |
+| `contributions.network_earnings` | ⬜ | float | Cumulative network earnings (unit defined by implementation) |
 | `contributions.first_contribution` | ⬜ | ISO 8601\|null | First contribution timestamp |
 | `contributions.last_contribution` | ⬜ | ISO 8601\|null | Most recent contribution timestamp |
 
@@ -90,7 +91,8 @@ This is a massive improvement over the current baseline of zero portability.
 
 | `source_framework` | Framework |
 |---|---|
-| `agent_zero` | Agent Zero / Inflectiv Vault (native, lossless) |
+| `openclaw` | OpenClaw / Inflectiv Vault (native, lossless — reference implementation) |
+| `agent_zero` | Agent Zero / Inflectiv Vault (lossless) |
 | `autogpt` | AutoGPT |
 | `crewai` | CrewAI |
 | `langgraph` | LangGraph |
@@ -106,7 +108,7 @@ This is a massive improvement over the current baseline of zero portability.
 2. `knowledge_subscriptions` are pointers only — never vault contents.
 3. `migration_notes` MUST contain an entry for every piece of data discarded or transformed.
 4. `memory.*` fields MUST be Markdown strings or `null`. Never binary, never JSON.
-5. `contributions` SHOULD be included when exporting from a vault with contribution history.
+5. `contributions` MUST be included. Exporters MUST populate at minimum the skeleton from `empty_amps()`.
 
 ### 2.2 Import Rules
 1. Importers MUST surface all `migration_notes` to the user — never silently discard.
@@ -119,36 +121,48 @@ This is a massive improvement over the current baseline of zero portability.
 - Existing `long_term` and `identity` take priority by default
 - Imported content appended with `## Imported from <source_framework>` heading
 - Implementations MAY offer `--overwrite` flag
+- Importers SHOULD warn the user if combined memory (existing + imported) exceeds 50 KB after append
 
 ---
 
 ## 3. Framework Adapters
 
-### 3.1 Agent Zero / Inflectiv Vault (Native — Reference Implementation)
+### 3.1 OpenClaw / Inflectiv Vault (Native — Reference Implementation)
 - **Export:** `MEMORY.md` → `long_term`, `SOUL.md` → `identity`, `task_plan.md` → `active_plan`
 - **Import:** Markdown sections appended to respective files
 - **Contributions:** Read from `stats.json` approved/staged counts + categories
 - **Lossiness:** None.
 
-### 3.2 AutoGPT
+### 3.2 Agent Zero / Inflectiv Vault (Lossless)
+- **Export:** `MEMORY.md` → `long_term`, `SOUL.md` → `identity`, `task_plan.md` → `active_plan`
+- **Import:** Markdown sections appended to respective files
+- **Contributions:** Read from `stats.json` approved/staged counts + categories
+- **Lossiness:** None.
+
+### 3.3 AutoGPT
 - **Export:** `memory.json` summaries → `long_term`, agent role/goals → `identity`
 - **Import:** Prepend to AutoGPT's `memory.json` as text summary entry
 - **Migration notes:** Tool configs, plugin state — preserved as raw JSON in notes
+- **Limitation:** `active_plan` is not extracted — AutoGPT has no equivalent source
 
-### 3.3 CrewAI
+### 3.4 CrewAI
 - **Export:** Agent `backstory` → `identity`, task output history → `long_term`
 - **Import:** Prepend AMPS `long_term` to agent `backstory` field
 - **Migration notes:** Crew topology, task dependencies — noted, not portable
+- **Limitation:** `active_plan` is not extracted — CrewAI has no equivalent source
 
-### 3.4 LangGraph
+### 3.5 LangGraph
 - **Export:** `MemorySaver` checkpoint text nodes → `long_term`
 - **Import:** Inject as initial `HumanMessage` context in new graph
 - **Migration notes:** State graph topology, tool bindings — noted
+- **Limitation:** `active_plan` is not extracted — LangGraph checkpoints do not distinguish plan state
 
-### 3.5 LlamaIndex
+### 3.6 LlamaIndex
 - **Export:** `SimpleDocumentStore` text nodes → `long_term`
 - **Import:** Add as `Document` nodes with `amps_import` metadata tag
 - **Migration notes:** Index structure — noted
+- **Limitation:** `active_plan` is not extracted — LlamaIndex document stores have no plan concept
+
 
 ---
 
@@ -227,7 +241,11 @@ score is quantifiably more valuable than one with 12 contributions from last wee
 - Major versions (2.0+) may break — `amps_version` field enables detection
 - Adapters maintained by community, Inflectiv as fallback maintainer
 
+**Versioning guidance for importers:**
+- A 1.0 importer encountering a 1.x document (e.g. 1.1, 1.2) MUST ignore unknown fields and proceed
+- A 1.0 importer encountering a 2.x document MUST warn the user that the document may require a newer importer
+
 ---
 
-*AMPS is MIT licensed. Reference implementation: Inflectiv Vault*
+*AMPS is MIT licensed. Reference implementation: OpenClaw / Inflectiv Vault*
 *Submit to OpenClaw Foundation: https://openclaw.foundation/standards*

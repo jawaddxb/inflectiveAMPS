@@ -1,14 +1,14 @@
 """
-AMPS Adapter -- Agent Zero / Inflectiv Vault (Lossless)
+AMPS Adapter -- OpenClaw / Inflectiv Vault (Native, Lossless)
+Reference implementation for AMPS v1.0.
 
 Usage:
-    from amps.adapters.agent_zero import AgentZeroAdapter
-    adapter = AgentZeroAdapter(vault_root="/path/to/vault")
+    from amps.adapters.openclaw import OpenClawAdapter
+    adapter = OpenClawAdapter(vault_root="/path/to/vault")
     doc = adapter.export()
     result = adapter.import_amps(foreign_doc)
 """
 import json
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -16,8 +16,8 @@ from typing import Optional
 from .base import AMPSAdapter, empty_amps
 
 
-class AgentZeroAdapter(AMPSAdapter):
-    FRAMEWORK = "agent_zero"
+class OpenClawAdapter(AMPSAdapter):
+    FRAMEWORK = "openclaw"
 
     def __init__(self, vault_root: str, stats_path: Optional[str] = None):
         self.root = Path(vault_root)
@@ -54,7 +54,7 @@ class AgentZeroAdapter(AMPSAdapter):
             return {}
 
     def export(self, agent_id: Optional[str] = None, **kwargs) -> dict:
-        """Lossless export from Agent Zero / Inflectiv Vault."""
+        """Lossless export from OpenClaw / Inflectiv Vault."""
         doc = empty_amps(
             agent_id or f"vlt_{self.root.name}",
             self.FRAMEWORK
@@ -93,7 +93,7 @@ class AgentZeroAdapter(AMPSAdapter):
         return doc
 
     def import_amps(self, amps_doc: dict, overwrite: bool = False, **kwargs) -> dict:
-        """Lossless import into Agent Zero / Inflectiv Vault."""
+        """Lossless import into OpenClaw / Inflectiv Vault."""
         self.root.mkdir(parents=True, exist_ok=True)
         applied, warnings = [], []
         source  = amps_doc.get("source_framework", "unknown")

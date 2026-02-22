@@ -1,0 +1,22 @@
+{
+  "amps_version": "1.0",
+  "exported_at": "2026-02-22T14:34:00+00:00",
+  "agent_id": "vlt_f145d55f6e1d4810",
+  "source_framework": "agent_zero",
+  "migration_notes": [],
+  "memory": {
+    "long_term": "# Memory\n\nAave V4 governance: proposal #247 passed with 72% approval.\nUniswap V4 hooks ecosystem grew 340% in Q1 2026.\n",
+    "identity": "# Identity\n\nI am a DeFi intelligence node specializing in governance tracking and TVL analysis.\nI prioritize accuracy over speed and always cite primary sources.\n",
+    "active_plan": "# Plan\n\n- [ ] Monitor Aave proposal #251 voting deadline\n- [ ] Update TVL dashboard for top-10 L2s\n"
+  },
+  "secrets": [],
+  "knowledge_subscriptions": ["defi_intelligence", "ai_intelligence"],
+  "contributions": {
+    "total_items": 47,
+    "categories": ["defi_governance", "defi_tvl"],
+    "quality_score": 0.91,
+    "network_earnings": 23.5,
+    "first_contribution": "2026-01-15T08:22:00+00:00",
+    "last_contribution": "2026-02-22T14:30:00+00:00"
+  }
+}

@@ -54,6 +54,7 @@ class AutoGPTAdapter(AMPSAdapter):
         doc["memory"]["long_term"] = ("# Agent Memory" + NL2 + NL2.join(lt)) if lt else "# Agent Memory" + NL2 + "(empty)"
         doc["memory"]["identity"] = NL.join(id_parts) if id_parts else "# Agent Identity" + NL2 + "(not set)"
         doc["migration_notes"] = notes
+        doc['secrets'] = []  # Enforce: secrets NEVER exported — AMPS spec §2.1
         return doc
     def import_amps(self, amps_doc, overwrite=False, **kwargs):
         self.workspace.mkdir(parents=True, exist_ok=True)

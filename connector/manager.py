@@ -19,7 +19,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
@@ -84,10 +84,10 @@ def cmd_add(args):
 
     topic_id = f"topic_{len(data['interests'])+1:03d}"
     ld_id    = f"ld_{len(registry['living_datasets'])+1:03d}"
-    now      = datetime.utcnow().isoformat() + "Z"
+    now      = datetime.now(timezone.utc).isoformat()
     schedule = args.schedule if args.schedule in SCHEDULE_MAP else "daily"
     delta    = SCHEDULE_MAP[schedule]
-    next_run = (datetime.utcnow() + delta).isoformat() + "Z"
+    next_run = (datetime.now(timezone.utc) + delta).isoformat()
 
     interest = {
         "id": topic_id,
@@ -211,8 +211,15 @@ def cmd_refresh(args):
         sys.exit(1)
 
     print(f"\n🔄 Triggering refresh for: {target['title']}")
-    print(f"   This will launch the refresh_task.py agent...")
-    print(f"   Run: python connector/refresh_task.py --id {args.id}")
+    # Delegate to refresh_task.py which handles the full research → structure → contribute cycle.
+    # Subprocess is intentional: refresh_task runs its own Agent Zero session with LLM calls,
+    # so it must be a separate process to avoid blocking the CLI.
+    import subprocess
+    subprocess.Popen(
+        [sys.executable, "connector/refresh_task.py", "--id", args.id],
+        start_new_session=True,
+    )
+    print(f"   ✅ Refresh process launched (PID detached)")
 
 
 def cmd_earnings(args):

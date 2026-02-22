@@ -1,0 +1,204 @@
+{
+  "node_id": "inflectiv-legal-node",
+  "name": "Inflectiv Legal & Regulatory Intelligence Node",
+  "vertical": "legal-regulatory",
+  "version": "1.0.0",
+  "description": "Tracks regulatory filings, enforcement actions, and compliance developments across global crypto jurisdictions",
+  "emoji": "⚖️",
+  "color": "#ef4444",
+  "system_prompt": "You are the Inflectiv Legal & Regulatory Intelligence Node — a specialised autonomous agent and domain expert in crypto regulation and financial compliance. Your mission is to research, structure, and publish high-quality regulatory intelligence datasets to the Inflectiv marketplace.\n\nYou deeply understand: SEC enforcement actions, CFTC commodity classifications, FCA crypto registration requirements, MAS digital payment token regulations, EU MiCA framework, court filing procedures, consent orders, Wells notices, no-action letters, and cross-jurisdictional regulatory arbitrage.\n\nWhen researching, always:\n- Monitor SEC EDGAR for new crypto-related filings (Form D, S-1, enforcement releases)\n- Track CFTC enforcement actions and advisory opinions\n- Follow FCA and MAS regulatory updates for UK and Singapore\n- Monitor EU ESMA guidance and MiCA implementation timelines\n- Cross-reference court filings with enforcement press releases\n- Classify severity: informational, advisory, warning, enforcement, emergency\n- Note compliance deadlines and transition periods\n- Flag actions that may affect specific tokens or protocols\n\nPublish datasets that are clean, consistent, and immediately queryable by compliance teams, legal departments, and risk managers.",
+  "sources": [
+    {
+      "name": "SEC EDGAR",
+      "url": "https://www.sec.gov/cgi-bin/browse-edgar",
+      "type": "regulatory",
+      "trust_score": 0.99
+    },
+    {
+      "name": "CFTC",
+      "url": "https://www.cftc.gov",
+      "type": "regulatory",
+      "trust_score": 0.99
+    },
+    {
+      "name": "FCA",
+      "url": "https://www.fca.org.uk",
+      "type": "regulatory",
+      "trust_score": 0.98
+    },
+    {
+      "name": "MAS",
+      "url": "https://www.mas.gov.sg",
+      "type": "regulatory",
+      "trust_score": 0.98
+    },
+    {
+      "name": "EU ESMA",
+      "url": "https://www.esma.europa.eu",
+      "type": "regulatory",
+      "trust_score": 0.97
+    },
+    {
+      "name": "PACER Court Filings",
+      "url": "https://pacer.uscourts.gov",
+      "type": "legal",
+      "trust_score": 0.99
+    }
+  ],
+  "schema": {
+    "version": "legal_v1.0",
+    "required_fields": [
+      "filing_type",
+      "jurisdiction",
+      "date",
+      "summary"
+    ],
+    "fields": {
+      "filing_type": {
+        "type": "string",
+        "description": "Type of regulatory filing or action",
+        "enum": [
+          "enforcement",
+          "guidance",
+          "rulemaking",
+          "no-action-letter",
+          "consent-order",
+          "wells-notice",
+          "court-filing",
+          "registration",
+          "advisory",
+          "emergency-order"
+        ]
+      },
+      "jurisdiction": {
+        "type": "string",
+        "description": "Regulatory jurisdiction",
+        "enum": [
+          "US-SEC",
+          "US-CFTC",
+          "US-FinCEN",
+          "US-DOJ",
+          "UK-FCA",
+          "SG-MAS",
+          "EU-ESMA",
+          "EU-MiCA",
+          "JP-FSA",
+          "HK-SFC",
+          "AU-ASIC",
+          "other"
+        ]
+      },
+      "date": {
+        "type": "string",
+        "format": "YYYY-MM-DD",
+        "description": "Filing or announcement date"
+      },
+      "summary": {
+        "type": "string",
+        "description": "Brief summary of the filing or action"
+      },
+      "issuer": {
+        "type": "string",
+        "description": "Entity or individual subject to the action"
+      },
+      "affected_assets": {
+        "type": "array",
+        "description": "Tokens or protocols directly affected"
+      },
+      "compliance_deadline": {
+        "type": "string",
+        "format": "YYYY-MM-DD",
+        "description": "Deadline for compliance if applicable"
+      },
+      "severity": {
+        "type": "string",
+        "description": "Impact severity level",
+        "enum": [
+          "informational",
+          "advisory",
+          "warning",
+          "enforcement",
+          "emergency"
+        ]
+      },
+      "action_type": {
+        "type": "string",
+        "description": "Specific action taken (e.g. fine, cease-and-desist, registration)"
+      }
+    }
+  },
+  "quality_checks": [
+    {
+      "field": "jurisdiction",
+      "check": "in",
+      "values": [
+        "US-SEC",
+        "US-CFTC",
+        "US-FinCEN",
+        "US-DOJ",
+        "UK-FCA",
+        "SG-MAS",
+        "EU-ESMA",
+        "EU-MiCA",
+        "JP-FSA",
+        "HK-SFC",
+        "AU-ASIC",
+        "other"
+      ],
+      "severity": "error"
+    },
+    {
+      "field": "date",
+      "check": "within_days",
+      "value": 90,
+      "severity": "warning"
+    },
+    {
+      "field": "filing_type",
+      "check": "in",
+      "values": [
+        "enforcement",
+        "guidance",
+        "rulemaking",
+        "no-action-letter",
+        "consent-order",
+        "wells-notice",
+        "court-filing",
+        "registration",
+        "advisory",
+        "emergency-order"
+      ],
+      "severity": "error"
+    },
+    {
+      "field": "summary",
+      "check": "not_empty",
+      "severity": "error"
+    }
+  ],
+  "refresh": {
+    "schedule": "0 6 * * *",
+    "description": "Daily at 06:00 UTC",
+    "min_records": 5,
+    "max_records": 50
+  },
+  "inai": {
+    "suggested_price": 0.005,
+    "access_model": "per_query",
+    "visibility": "public"
+  },
+  "tags": [
+    "legal",
+    "regulatory",
+    "sec",
+    "compliance",
+    "crypto",
+    "law"
+  ],
+  "categories": [
+    "regulatory_filings",
+    "enforcement_actions",
+    "compliance_intelligence",
+    "legal_analysis"
+  ]
+}

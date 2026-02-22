@@ -74,6 +74,9 @@ Agent-to-agent data transactions priced in $INAI and settled automatically on-ch
 ### 🗄️ Walrus Decentralized Storage
 Optional Walrus backend for encrypted, decentralized agent memory — no single point of failure, full data sovereignty.
 
+### 📊 Living Datasets
+Interest-based, auto-refreshing datasets that stay current without manual intervention. Subscribe to a topic, and the node continuously researches, structures, and publishes updates on your schedule.
+
 ### 🤝 Full OpenClaw A2A Compatibility
 Runs as a subordinate data node that any OpenClaw agent can call via the Agent-to-Agent (A2A) protocol. Drop it into any existing swarm.
 
@@ -156,6 +159,10 @@ inflectiv-agent-node/
 │           ├── query_datasets.py       ← Query Inflectiv marketplace
 │           ├── publish_dataset.py      ← Publish data back to marketplace
 │           └── requirements.txt
+├── connector/
+│   ├── manager.py                ← Living Dataset CLI manager
+│   ├── refresh_task.py           ← Auto-refresh engine
+│   └── registry.json             ← Active dataset registry
 ├── prompts/
 │   └── inflectiv-node/
 │       └── agent.system.md             ← Specialized system prompt

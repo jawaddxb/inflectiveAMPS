@@ -47,7 +47,7 @@ class LangGraphAdapter(AMPSAdapter):
             try:
                 data = json.loads(f.read_text())
                 if isinstance(data, dict):
-                    c = data.get("content") or data.get("output") or data.get("text") or data.get("output")
+                    c = data.get("content") or data.get("output") or data.get("text")
                     if c: parts.append("## " + f.stem + NL + str(c)[:500])
                 elif isinstance(data, list):
                     for item in data[-5:]:
@@ -70,6 +70,7 @@ class LangGraphAdapter(AMPSAdapter):
         doc["memory"]["identity"] = ("# Agent Identity (LangGraph)" + NL2 + system_prompt) if system_prompt else "# Agent Identity" + NL2 + "(not set)"
         notes.append("import: AMPS injected as initial HumanMessage")
         doc["migration_notes"] = notes
+        doc['secrets'] = []  # Enforce: secrets NEVER exported — AMPS spec §2.1
         return doc
     def import_amps(self, amps_doc, **kwargs):
         applied, warnings = [], []

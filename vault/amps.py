@@ -1,6 +1,6 @@
 """
 AMPS — Agent Memory Portability Standard
-Agent Zero / Inflectiv Vault native adapter (reference implementation)
+Agent Zero / Inflectiv Vault native adapter (lossless)
 
 Export: vault state → .amps.json
 Import: .amps.json → vault state (append with conflict resolution)

@@ -59,7 +59,7 @@ openclaw skill install inflectiv-data-node
 Once installed, any OpenClaw agent automatically:
 - Queries Inflectiv before browsing the web (**Query-Before-Browse**)
 - Publishes new structured findings back to the marketplace (**Publish-Back**)
-- Participates in the $INAI data economy
+- Participates in the data economy
 
 ### Option B: Official Node Deployment
 
@@ -94,7 +94,7 @@ Every OpenClaw agent that uses Inflectiv becomes a contributor:
          ↓
  Next agent finds it → skips web browsing
          ↓
- Data creator earns $INAI
+ Data creator earns $INAI tokens
          ↓
  More agents use Inflectiv → more data → more agents
 ```
@@ -102,6 +102,16 @@ Every OpenClaw agent that uses Inflectiv becomes a contributor:
 140,000 OpenClaw developers × even 5% adoption = **7,000 active data contributors** seeding the Inflectiv marketplace overnight.
 
 ---
+
+### The Vertical Intelligence Node Network (VINN)
+
+VINN is Inflectiv's decentralized intelligence oracle network — pre-specialised agent
+nodes (DeFi, AI, Legal, Crypto News) that autonomously own and refresh specific data
+niches. Community operators run VINN nodes, earn $INAI when their structured datasets
+are queried, and create a self-improving marketplace powered by niche expertise.
+
+VINN nodes expose a FastA2A v0.2 compatible API on port 8765, making them
+directly queryable by any OpenClaw agent via standard A2A messaging.
 
 ## What We're Asking For
 
@@ -117,8 +127,8 @@ We handle all development, maintenance, and support. Zero resource burden on the
 
 - ✅ Production-ready AgentSkill (MIT licensed, open-source)
 - ✅ 6,700+ structured datasets available from day one
-- ✅ Free tier — no $INAI required to get started
-- ✅ $INAI earnings for any OpenClaw agent that publishes data
+- ✅ Free tier — no tokens required to get started
+- ✅ Earnings in $INAI for any OpenClaw agent that publishes data
 - ✅ Active team supporting integration questions
 - ✅ Co-marketing to Inflectiv's 10,000+ user base
 
@@ -126,7 +136,7 @@ We handle all development, maintenance, and support. Zero resource burden on the
 
 ## About Inflectiv
 
-Inflectiv (inflectiv.ai) is the **Intelligence Economy platform** — transforming raw data into structured, tokenized datasets for AI agents. Built on Sui with Walrus decentralized storage. $INAI is the economic primitive of the Intelligence Economy.
+Inflectiv (inflectiv.ai) is the **Intelligence Economy platform** — transforming raw data into structured, tokenized datasets for AI agents. Built on Sui with Walrus decentralized storage.
 
 - 🌐 Platform: https://inflectiv.ai
 - 📚 Docs: https://inflectiv.gitbook.io/inflectiv
@@ -159,7 +169,7 @@ Inflectiv has authored and open-sourced the **Agent Memory Portability Standard 
 
 **Why it matters for OpenClaw:**
 - Agents built on any framework (Agent Zero, AutoGPT, CrewAI, LangGraph, LlamaIndex) can export their memory as AMPS and import into any other — zero data loss between AMPS-native implementations
-- Inflectiv Vault is the reference implementation: vault identity, long-term memory, and $INAI contribution history all travel with the agent
+- OpenClaw / Inflectiv Vault is the AMPS reference implementation: vault identity, long-term memory, and contribution history all travel with the agent — lossless round-trip guaranteed
 - AMPS is MIT licensed and community-governed — Inflectiv contributed v1, OpenClaw Foundation stewards it
 - The standard creates infrastructure lock-in through openness: whoever owns the memory portability standard owns agent identity
 
@@ -167,9 +177,11 @@ Inflectiv has authored and open-sourced the **Agent Memory Portability Standard 
 - `memory.long_term` — persistent knowledge (markdown)
 - `memory.identity` — agent soul/persona (markdown)
 - `memory.active_plan` — current task plan
-- `contributions` — portable $INAI reputation CV
+- `contributions` — portable reputation CV
 - `migration_notes` — transparent loss accounting
 - `secrets` — always empty by spec (never exported)
 
 **Working adapters (all MIT licensed, PR-ready):**
-Agent Zero (native) · AutoGPT · CrewAI · LangGraph · LlamaIndex
+**OpenClaw (native — reference implementation)** · Agent Zero · AutoGPT · CrewAI · LangGraph · LlamaIndex
+
+OpenClaw agents are the AMPS reference implementation — vault-backed, lossless memory portability with zero migration notes. Any OpenClaw agent can export its full intelligence to `.amps.json` and import into any other framework, or receive memory from any AMPS-compatible source.

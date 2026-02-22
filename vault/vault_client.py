@@ -45,7 +45,7 @@ class SingleVault:
                  role: str = "owner", timeout: int = 10):
         url = url.rstrip("/")
         if not url.startswith("http"):
-            url = f"http://{url}"
+            url = f"https://{url}"
         self.url = url
         self.token = token
         self.name = name
@@ -242,7 +242,7 @@ class VaultClient:
         """Store an encrypted secret in personal vault."""
         if not self._personal:
             raise VaultError("No personal vault configured")
-        r = self._personal._req("POST", "/vault/secrets", {"key": key, "value": value, "label": label})
+        r = self._personal._req("POST", f"/vault/secrets/{key}", {"value": value})
         return r.get("stored", False)
 
     def contribute(self, content: str) -> dict:

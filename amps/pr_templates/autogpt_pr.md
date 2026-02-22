@@ -52,6 +52,6 @@ print(result["migration_notes"])  # what didn't transfer
 - `autogpt/amps_adapter.py` — 200 lines, zero new dependencies
 - `docs/memory_portability.md` — usage guide
 
-**Reference implementation:** [Inflectiv Vault](https://github.com/inflectiv/vault) (Agent Zero native, lossless)  
+**Reference implementation:** [OpenClaw / Inflectiv Vault](https://github.com/inflectiv/vault) (native, lossless)
 **Full spec:** [AMPS_SPEC.md](https://github.com/inflectiv/amps/blob/main/AMPS_SPEC.md)  
 **License:** MIT

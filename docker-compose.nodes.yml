@@ -3,6 +3,7 @@ version: '3.9'
 # Inflectiv VINN — Multi-node deployment
 # Run all verticals: docker compose -f docker-compose.nodes.yml up -d
 # Run one vertical:  docker compose -f docker-compose.nodes.yml up -d defi-node
+# Query API:         curl http://localhost:8765/health
 
 x-node-base: &node-base
   image: inflectiv/node:latest
@@ -44,12 +45,48 @@ services:
       inflectiv.vertical: crypto-news
       inflectiv.refresh: hourly
 
+  vc-node:
+    <<: *node-base
+    container_name: inflectiv-vc-node
+    environment:
+      PROFILE: vc-funding
+    labels:
+      inflectiv.vertical: vc-funding
+      inflectiv.refresh: weekly
+
+  legal-node:
+    <<: *node-base
+    container_name: inflectiv-legal-node
+    environment:
+      PROFILE: legal-regulatory
+    labels:
+      inflectiv.vertical: legal-regulatory
+      inflectiv.refresh: daily
+
+  node-api:
+    <<: *node-base
+    container_name: inflectiv-node-api
+    command: python /app/nodes/node_api.py
+    ports:
+      - "8765:8765"    # FastA2A v0.2 REST + A2A endpoint
+    environment:
+      NODE_API_PORT: "8765"
+      NODE_API_HOST: "0.0.0.0"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      inflectiv.service: node-api
+      inflectiv.protocol: fasta2a-v0.2
+
   leaderboard:
     <<: *node-base
     container_name: inflectiv-leaderboard
     command: leaderboard
     ports:
-      - "8080:8080"
+      - "8080:8080"    # HTML leaderboard UI
     environment:
       SERVE_LEADERBOARD: "true"
 

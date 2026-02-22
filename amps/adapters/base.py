@@ -42,8 +42,9 @@ class AMPSAdapter(ABC):
 
     Implement `export()` and `import_amps()` for each framework.
     The lossiness contract:
-      - Agent Zero (native): lossless
-      - All others:          best-effort; use migration_notes for anything dropped
+      - OpenClaw / Inflectiv Vault (native): lossless
+      - Agent Zero / Inflectiv Vault: lossless
+      - All others: best-effort; use migration_notes for anything dropped
     """
 
     FRAMEWORK = "custom"  # override in subclass
@@ -61,8 +62,10 @@ class AMPSAdapter(ABC):
     def import_amps(self, amps_doc: dict, **kwargs) -> dict:
         """
         Import an AMPS document into the framework.
-        Must return:
+        Must return at minimum:
           { ok, applied: list[str], migration_notes: list[str], warnings: list[str] }
+        Adapters MAY return additional framework-specific keys (e.g.
+        ``documents`` for LlamaIndex, ``initial_messages`` for LangGraph).
         """
         ...
 

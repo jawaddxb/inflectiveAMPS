@@ -1,6 +1,6 @@
 # AMPS — Agent Memory Portability Standard
 
-**Version 1.0 | MIT License | Reference Implementation: [Inflectiv Vault](https://github.com/inflectiv/vault)**
+**Version 1.0 | MIT License | Reference Implementation: [OpenClaw / Inflectiv Vault](https://github.com/inflectiv/vault)**
 
 > Migrate your agent in 30 seconds.
 
@@ -15,18 +15,22 @@ of an agent's intelligence.
 
 ## Quick Start
 
-```bash
-# Export from Agent Zero / Inflectiv Vault
-python amps/adapters/agent_zero.py export --vault-root /path/to/vault
+```python
+# Export from OpenClaw / Inflectiv Vault (reference implementation)
+from amps.adapters.openclaw import OpenClawAdapter
+adapter = OpenClawAdapter(vault_root="/path/to/vault")
+doc = adapter.export()
 
-# Validate any .amps.json file
-python amps/validate.py my_agent.amps.json
-
-# Import into a new vault
-python amps/adapters/agent_zero.py import --vault-root /new/vault --input my_agent.amps.json
+# Import into a new OpenClaw vault
+adapter2 = OpenClawAdapter(vault_root="/new/vault")
+result = adapter2.import_amps(doc)
 ```
 
 ```python
+# Export from Agent Zero / Inflectiv Vault
+from amps.adapters.agent_zero import AgentZeroAdapter
+doc = AgentZeroAdapter(vault_root="/path/to/vault").export()
+
 # Export from CrewAI
 from amps.adapters.crewai import CrewAIAdapter
 doc = CrewAIAdapter(agents=crew.agents, crew=crew).export()
@@ -35,6 +39,11 @@ doc = CrewAIAdapter(agents=crew.agents, crew=crew).export()
 from amps.adapters.langgraph import LangGraphAdapter
 result = LangGraphAdapter().import_amps(doc)
 new_graph.invoke({"messages": result["initial_messages"] + msgs})
+```
+
+```bash
+# Validate any .amps.json file
+python amps/validate.py my_agent.amps.json
 ```
 
 ---
@@ -70,6 +79,7 @@ new_graph.invoke({"messages": result["initial_messages"] + msgs})
 
 | Framework | Adapter | Lossiness | Install |
 |---|---|---|---|
+| OpenClaw / Inflectiv Vault | `adapters/openclaw.py` | **Lossless** | native |
 | Agent Zero / Inflectiv Vault | `adapters/agent_zero.py` | **Lossless** | native |
 | AutoGPT | `adapters/autogpt.py` | Best-effort | copy file |
 | CrewAI | `adapters/crewai.py` | Best-effort | copy file |
@@ -112,7 +122,8 @@ amps/
     amps_v1.schema.json            JSON Schema for machine validation
   adapters/
     base.py                        Abstract base class
-    agent_zero.py                  Reference implementation (lossless)
+    openclaw.py                    Reference implementation (lossless)
+    agent_zero.py                  Agent Zero adapter (lossless)
     autogpt.py                     AutoGPT adapter
     crewai.py                      CrewAI adapter
     langgraph.py                   LangGraph adapter
@@ -134,5 +145,5 @@ amps/
 
 MIT. Use it. Fork it. Build on it.
 
-Reference implementation: [Inflectiv Vault](https://github.com/inflectiv/vault)  
+Reference implementation: [OpenClaw / Inflectiv Vault](https://github.com/inflectiv/vault)
 Spec maintained by: [OpenClaw Foundation](https://openclaw.foundation) + Inflectiv

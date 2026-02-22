@@ -6,6 +6,7 @@ Returns results + also_found for transparent conflict surfacing.
 import os
 import json
 import re
+import hashlib
 from datetime import datetime, timezone
 from typing import Optional
 from memory_store import MemoryStore
@@ -37,8 +38,8 @@ def _deduplicate(results: list) -> tuple[list, list]:
     conflicts: list = []
 
     for item in results:
-        # simple content fingerprint: first 80 chars lowercase
-        key = item["content"][:80].lower().strip()
+        # content fingerprint: hash of full content for accurate deduplication
+        key = hashlib.sha256(item["content"].strip().lower().encode()).hexdigest()
         if key not in seen:
             seen[key] = item
         else:
@@ -93,6 +94,11 @@ class QueryEngine:
         Calls POST {url}/vault/query on the remote FastAPI vault server.
         Falls back gracefully if unreachable.
         """
+        if url.startswith("http://"):
+            import sys
+            print(f"[vault] WARNING: remote vault '{vault_name}' uses HTTP — "
+                  f"token will be sent in plaintext. Use HTTPS in production.",
+                  file=sys.stderr)
         try:
             import urllib.request
             payload = json.dumps({"q": query, "include_network": False}).encode()

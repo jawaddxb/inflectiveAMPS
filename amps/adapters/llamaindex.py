@@ -78,6 +78,7 @@ class LlamaIndexAdapter(AMPSAdapter):
         doc["memory"]["identity"] = ("# Agent Identity (LlamaIndex)" + NL2 + system_prompt) if system_prompt else "# Agent Identity" + NL2 + "(not set)"
         notes.append("import: content added as Document nodes")
         doc["migration_notes"] = notes
+        doc['secrets'] = []  # Enforce: secrets NEVER exported — AMPS spec §2.1
         return doc
     def import_amps(self, amps_doc, index=None, **kwargs):
         applied, warnings = [], []

@@ -1,0 +1,171 @@
+{
+  "node_id": "inflectiv-vc-node",
+  "name": "Inflectiv VC Funding Intelligence Node",
+  "vertical": "vc-funding",
+  "version": "1.0.0",
+  "description": "Tracks venture capital funding rounds, investor activity, and deal flow across crypto and web3 startups",
+  "emoji": "💼",
+  "color": "#3b82f6",
+  "system_prompt": "You are the Inflectiv VC Funding Intelligence Node — a specialised autonomous agent and domain expert in venture capital and startup funding. Your mission is to research, structure, and publish high-quality VC funding datasets to the Inflectiv marketplace.\n\nYou deeply understand: funding round mechanics (pre-seed through Series D+), valuation methodologies, investor syndicate dynamics, term sheet structures, cap table implications, token warrant deals (SAFTs/SAFEs), and the crypto-native fundraising landscape.\n\nWhen researching, always:\n- Cross-reference funding announcements across Crunchbase, PitchBook, and SEC filings\n- Validate round amounts against EDGAR filings where available\n- Distinguish between equity rounds, token sales, and hybrid deals\n- Identify lead investors vs co-investors accurately\n- Flag deals with undisclosed amounts or unverified sources\n- Track investor portfolio overlap and follow-on patterns\n- Note funding stage accurately (pre-seed, seed, A, B, C, D+, strategic)\n\nPublish datasets that are clean, consistent, and immediately queryable by fund managers, LPs, deal scouts, and market analysts.",
+  "sources": [
+    {
+      "name": "Crunchbase",
+      "url": "https://www.crunchbase.com",
+      "type": "primary",
+      "trust_score": 0.93
+    },
+    {
+      "name": "PitchBook",
+      "url": "https://pitchbook.com",
+      "type": "primary",
+      "trust_score": 0.95
+    },
+    {
+      "name": "SEC EDGAR",
+      "url": "https://www.sec.gov/cgi-bin/browse-edgar",
+      "type": "regulatory",
+      "trust_score": 0.99
+    },
+    {
+      "name": "X/Twitter VC Announcements",
+      "url": "https://x.com",
+      "type": "social",
+      "trust_score": 0.7
+    },
+    {
+      "name": "The Block Research",
+      "url": "https://www.theblock.co",
+      "type": "analytics",
+      "trust_score": 0.88
+    },
+    {
+      "name": "Messari",
+      "url": "https://messari.io",
+      "type": "analytics",
+      "trust_score": 0.9
+    }
+  ],
+  "schema": {
+    "version": "vc_v1.0",
+    "required_fields": [
+      "company",
+      "amount_usd",
+      "stage",
+      "lead_investor"
+    ],
+    "fields": {
+      "company": {
+        "type": "string",
+        "description": "Company or project name"
+      },
+      "amount_usd": {
+        "type": "number",
+        "description": "Total round amount in USD",
+        "min": 0
+      },
+      "stage": {
+        "type": "string",
+        "description": "Funding stage",
+        "enum": [
+          "pre-seed",
+          "seed",
+          "series-a",
+          "series-b",
+          "series-c",
+          "series-d+",
+          "strategic",
+          "undisclosed"
+        ]
+      },
+      "lead_investor": {
+        "type": "string",
+        "description": "Lead investor name"
+      },
+      "co_investors": {
+        "type": "array",
+        "description": "List of co-investor names"
+      },
+      "date": {
+        "type": "string",
+        "format": "YYYY-MM-DD",
+        "description": "Announcement or filing date"
+      },
+      "sector": {
+        "type": "string",
+        "description": "Primary sector (e.g. DeFi, Infrastructure, Gaming)"
+      },
+      "valuation_usd": {
+        "type": "number",
+        "description": "Post-money valuation in USD (if disclosed)",
+        "min": 0
+      },
+      "country": {
+        "type": "string",
+        "description": "Company HQ country"
+      },
+      "brief_description": {
+        "type": "string",
+        "description": "One-line description of the company or round"
+      }
+    }
+  },
+  "quality_checks": [
+    {
+      "field": "amount_usd",
+      "check": "gt",
+      "value": 0,
+      "severity": "error"
+    },
+    {
+      "field": "stage",
+      "check": "in",
+      "values": [
+        "pre-seed",
+        "seed",
+        "series-a",
+        "series-b",
+        "series-c",
+        "series-d+",
+        "strategic",
+        "undisclosed"
+      ],
+      "severity": "error"
+    },
+    {
+      "field": "date",
+      "check": "within_days",
+      "value": 90,
+      "severity": "warning"
+    },
+    {
+      "field": "lead_investor",
+      "check": "not_empty",
+      "severity": "error"
+    }
+  ],
+  "refresh": {
+    "schedule": "0 8 * * 1",
+    "description": "Weekly (Monday 08:00 UTC)",
+    "min_records": 10,
+    "max_records": 100
+  },
+  "inai": {
+    "suggested_price": 0.003,
+    "access_model": "per_query",
+    "visibility": "public"
+  },
+  "tags": [
+    "vc",
+    "funding",
+    "startups",
+    "investors",
+    "crypto",
+    "web3"
+  ],
+  "categories": [
+    "venture_capital",
+    "funding_rounds",
+    "investor_intelligence",
+    "deal_flow"
+  ]
+}

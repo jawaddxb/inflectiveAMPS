@@ -19,14 +19,37 @@ REQUIRED_FIELDS = [
     "migration_notes", "memory", "secrets", "contributions"
 ]
 REQUIRED_MEMORY = ["long_term", "identity"]
-KNOWN_FRAMEWORKS = {"agent_zero", "autogpt", "crewai", "langgraph", "llamaindex", "custom"}
+KNOWN_FRAMEWORKS = {"agent_zero", "autogpt", "crewai", "langgraph", "llamaindex", "openclaw", "custom"}
+
+
+def _validate_jsonschema(doc: dict) -> list:
+    """Validate against the JSON schema if jsonschema is available. Returns errors list."""
+    try:
+        import jsonschema
+    except ImportError:
+        return []  # graceful degradation — fall through to manual checks
+    if not SCHEMA_PATH.exists():
+        return []
+    schema = json.loads(SCHEMA_PATH.read_text())
+    errors = []
+    validator = jsonschema.Draft202012Validator(schema)
+    for err in validator.iter_errors(doc):
+        path = ".".join(str(p) for p in err.absolute_path) if err.absolute_path else "(root)"
+        errors.append(f"schema: {path} — {err.message}")
+    return errors
 
 
 def validate(doc: dict, strict: bool = False) -> tuple:
     """Returns (errors: list, warnings: list)"""
     errors, warnings = [], []
 
-    # Required fields
+    # JSON Schema validation (if jsonschema is installed)
+    schema_errors = _validate_jsonschema(doc)
+    if schema_errors:
+        errors.extend(schema_errors)
+        return errors, warnings  # schema errors are authoritative — skip manual checks
+
+    # Required fields (manual fallback when jsonschema not available)
     for f in REQUIRED_FIELDS:
         if f not in doc:
             errors.append(f"MISSING required field: {f}")
@@ -88,12 +111,19 @@ def validate(doc: dict, strict: bool = False) -> tuple:
         if qs is not None and not (0.0 <= qs <= 1.0):
             warnings.append(f"contributions.quality_score {qs} outside 0-1 range")
 
-    # Substantive warnings
+    # Substantive warnings (skip known default values from fresh vault exports)
+    _DEFAULT_LT = {"# Agent Memory\n\n(empty)", "# Agent Memory\n\n_No memories yet. This file grows as your agent works._"}
+    _DEFAULT_ID = {"# Agent Identity\n\n(not set)", "# Agent Soul\n\n## Identity\nI am an intelligent agent connected to the Inflectiv network."}
     mem = doc.get("memory", {})
-    if not mem.get("long_term") or mem.get("long_term") == "# Agent Memory\n\n(empty)":
+    lt = mem.get("long_term", "")
+    if not lt:
         warnings.append("memory.long_term is empty — export may not have captured any knowledge")
-    if not mem.get("identity") or mem.get("identity") == "# Agent Identity\n\n(not set)":
+    elif lt.strip() in _DEFAULT_LT:
+        pass  # default value from fresh vault — not a warning
+    if not mem.get("identity"):
         warnings.append("memory.identity is not set — agent personality will not be migrated")
+    elif mem.get("identity", "").strip() in _DEFAULT_ID:
+        pass  # default value from fresh vault — not a warning
     if doc.get("migration_notes"):
         warnings.append(f"{len(doc['migration_notes'])} migration note(s) — review before import")
 

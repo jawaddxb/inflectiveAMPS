@@ -5,6 +5,8 @@ Loads a vertical profile and runs the full research → structure → publish pi
 Usage: python node_launcher.py --profile defi
        python node_launcher.py --profile ai-models
        python node_launcher.py --profile crypto-news
+       python node_launcher.py --profile vc-funding
+       python node_launcher.py --profile legal-regulatory
        python node_launcher.py --list
 """
 
@@ -80,7 +82,7 @@ def load_registry() -> dict:
     if REGISTRY_FILE.exists():
         with open(REGISTRY_FILE) as f:
             return json.load(f)
-    return {"nodes": {}, "network_stats": {"total_queries": 0, "total_datasets": 0, "total_inai_earned": 0.0}}
+    return {"nodes": {}, "network_stats": {"total_queries_served": 0, "total_datasets_published": 0, "total_inai_earned": 0.0}}
 
 def save_registry(reg: dict):
     REGISTRY_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -190,7 +192,7 @@ def update_node_stats(node_id: str, run_result: dict, registry: dict) -> dict:
     node["datasets_published"] += 1
     node["freshness_score"] = 1.0
     ratio = min(1.0, node["queries_served"] / max(node["datasets_published"] * 100, 1))
-    node["quality_score"] = round(min(1.0, run_result["quality_score"] * 0.7 + ratio * 0.3), 2)
+    node["quality_score"] = round(max(0.0, min(1.0, run_result["quality_score"] * 0.7 + ratio * 0.3)), 2)
     node["status"] = "active"
     registry["network_stats"]["total_datasets_published"] += 1
     return registry

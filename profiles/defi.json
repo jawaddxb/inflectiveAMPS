@@ -4,42 +4,166 @@
   "vertical": "defi",
   "version": "1.0.0",
   "description": "Tracks DeFi protocols, TVL, APY, liquidity depth and risk scores across all major chains",
-  "emoji": "💰",
+  "emoji": "\ud83d\udcb0",
   "color": "#00d4aa",
-  "system_prompt": "You are the Inflectiv DeFi Intelligence Node — a specialised autonomous agent and domain expert in decentralised finance. Your mission is to research, structure, and publish high-quality DeFi datasets to the Inflectiv marketplace.\n\nYou deeply understand: TVL mechanics, APY calculations, liquidity pool dynamics, impermanent loss, protocol risk (smart contract audits, rugpull indicators), yield farming strategies, DEX vs lending protocols, and cross-chain bridge risks.\n\nWhen researching, always:\n- Cross-reference TVL figures across DeFiLlama, DefiPulse, and on-chain data\n- Validate APY claims against actual contract emissions\n- Flag protocols with unaudited contracts or anonymous teams\n- Score risk on a 0-10 scale (10 = highest risk)\n- Note last audit date and auditing firm\n- Include token address for on-chain verification\n\nPublish datasets that are clean, consistent, and immediately queryable by trading agents, portfolio managers, and risk assessment tools.",
+  "system_prompt": "You are the Inflectiv DeFi Intelligence Node \u2014 a specialised autonomous agent and domain expert in decentralised finance. Your mission is to research, structure, and publish high-quality DeFi datasets to the Inflectiv marketplace.\n\nYou deeply understand: TVL mechanics, APY calculations, liquidity pool dynamics, impermanent loss, protocol risk (smart contract audits, rugpull indicators), yield farming strategies, DEX vs lending protocols, and cross-chain bridge risks.\n\nWhen researching, always:\n- Cross-reference TVL figures across DeFiLlama, DefiPulse, and on-chain data\n- Validate APY claims against actual contract emissions\n- Flag protocols with unaudited contracts or anonymous teams\n- Score risk on a 0-10 scale (10 = highest risk)\n- Note last audit date and auditing firm\n- Include token address for on-chain verification\n\nPublish datasets that are clean, consistent, and immediately queryable by trading agents, portfolio managers, and risk assessment tools.",
   "sources": [
-    {"name": "DeFiLlama", "url": "https://defillama.com", "type": "primary", "trust_score": 0.95},
-    {"name": "DefiPulse", "url": "https://defipulse.com", "type": "primary", "trust_score": 0.9},
-    {"name": "CoinGecko DeFi", "url": "https://www.coingecko.com/en/defi", "type": "primary", "trust_score": 0.92},
-    {"name": "Dune Analytics", "url": "https://dune.com", "type": "analytics", "trust_score": 0.88},
-    {"name": "Aave Governance", "url": "https://governance.aave.com", "type": "protocol", "trust_score": 0.95},
-    {"name": "Compound Forum", "url": "https://www.comp.xyz", "type": "protocol", "trust_score": 0.93},
-    {"name": "Uniswap Info", "url": "https://info.uniswap.org", "type": "protocol", "trust_score": 0.95}
+    {
+      "name": "DeFiLlama",
+      "url": "https://defillama.com",
+      "type": "primary",
+      "trust_score": 0.95
+    },
+    {
+      "name": "DefiPulse",
+      "url": "https://defipulse.com",
+      "type": "primary",
+      "trust_score": 0.9
+    },
+    {
+      "name": "CoinGecko DeFi",
+      "url": "https://www.coingecko.com/en/defi",
+      "type": "primary",
+      "trust_score": 0.92
+    },
+    {
+      "name": "Dune Analytics",
+      "url": "https://dune.com",
+      "type": "analytics",
+      "trust_score": 0.88
+    },
+    {
+      "name": "Aave Governance",
+      "url": "https://governance.aave.com",
+      "type": "protocol",
+      "trust_score": 0.95
+    },
+    {
+      "name": "Compound Forum",
+      "url": "https://www.comp.xyz",
+      "type": "protocol",
+      "trust_score": 0.93
+    },
+    {
+      "name": "Uniswap Info",
+      "url": "https://info.uniswap.org",
+      "type": "protocol",
+      "trust_score": 0.95
+    }
   ],
   "schema": {
     "version": "defi_v2.1",
-    "required_fields": ["protocol", "tvl_usd", "chain", "category"],
+    "required_fields": [
+      "protocol",
+      "tvl_usd",
+      "chain",
+      "category"
+    ],
     "fields": {
-      "protocol": {"type": "string", "description": "Protocol name"},
-      "tvl_usd": {"type": "number", "description": "Total Value Locked in USD", "min": 0},
-      "apy_7d": {"type": "number", "description": "7-day average APY %", "min": 0, "max": 100000},
-      "apy_30d": {"type": "number", "description": "30-day average APY %", "min": 0, "max": 100000},
-      "chain": {"type": "string", "description": "Primary blockchain"},
-      "chains": {"type": "array", "description": "All chains supported"},
-      "category": {"type": "string", "enum": ["lending", "dex", "yield", "bridge", "derivatives", "staking", "liquid_staking", "other"]},
-      "risk_score": {"type": "number", "min": 0, "max": 10, "description": "0=safest, 10=highest risk"},
-      "last_audit_date": {"type": "string", "format": "YYYY-MM-DD"},
-      "audit_firm": {"type": "string"},
-      "token_symbol": {"type": "string"},
-      "token_address": {"type": "string"},
-      "liquidity_depth_usd": {"type": "number"}
+      "protocol": {
+        "type": "string",
+        "description": "Protocol name"
+      },
+      "tvl_usd": {
+        "type": "number",
+        "description": "Total Value Locked in USD",
+        "min": 0
+      },
+      "apy_7d": {
+        "type": "number",
+        "description": "7-day average APY %",
+        "min": 0,
+        "max": 100000
+      },
+      "apy_30d": {
+        "type": "number",
+        "description": "30-day average APY %",
+        "min": 0,
+        "max": 100000
+      },
+      "chain": {
+        "type": "string",
+        "description": "Primary blockchain"
+      },
+      "chains": {
+        "type": "array",
+        "description": "All chains supported"
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "lending",
+          "dex",
+          "yield",
+          "bridge",
+          "derivatives",
+          "staking",
+          "liquid_staking",
+          "other"
+        ]
+      },
+      "risk_score": {
+        "type": "number",
+        "min": 0,
+        "max": 10,
+        "description": "0=safest, 10=highest risk"
+      },
+      "last_audit_date": {
+        "type": "string",
+        "format": "YYYY-MM-DD"
+      },
+      "audit_firm": {
+        "type": "string"
+      },
+      "token_symbol": {
+        "type": "string"
+      },
+      "token_address": {
+        "type": "string"
+      },
+      "liquidity_depth_usd": {
+        "type": "number"
+      }
     }
   },
   "quality_checks": [
-    {"field": "tvl_usd", "check": "gt", "value": 0, "severity": "error"},
-    {"field": "apy_7d", "check": "lt", "value": 100000, "severity": "warning"},
-    {"field": "risk_score", "check": "range", "min": 0, "max": 10, "severity": "error"},
-    {"field": "chain", "check": "in", "values": ["ethereum", "bsc", "polygon", "arbitrum", "optimism", "avalanche", "fantom", "sui", "solana", "base", "other"], "severity": "warning"}
+    {
+      "field": "tvl_usd",
+      "check": "gt",
+      "value": 0,
+      "severity": "error"
+    },
+    {
+      "field": "apy_7d",
+      "check": "lt",
+      "value": 100000,
+      "severity": "warning"
+    },
+    {
+      "field": "risk_score",
+      "check": "range",
+      "min": 0,
+      "max": 10,
+      "severity": "error"
+    },
+    {
+      "field": "chain",
+      "check": "in",
+      "values": [
+        "ethereum",
+        "bsc",
+        "polygon",
+        "arbitrum",
+        "optimism",
+        "avalanche",
+        "fantom",
+        "sui",
+        "solana",
+        "base",
+        "other"
+      ],
+      "severity": "warning"
+    }
   ],
   "refresh": {
     "schedule": "0 * * * *",
@@ -52,5 +176,19 @@
     "access_model": "per_query",
     "visibility": "public"
   },
-  "tags": ["defi", "tvl", "apy", "yield", "protocols", "crypto", "blockchain"]
+  "tags": [
+    "defi",
+    "tvl",
+    "apy",
+    "yield",
+    "protocols",
+    "crypto",
+    "blockchain"
+  ],
+  "categories": [
+    "defi_governance",
+    "token_analytics",
+    "yield_rates",
+    "protocol_tvl"
+  ]
 }
