@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inflectiv x OpenClaw — Intelligence Layer</title>
+<title>Inflectiv × OpenClaw — Give Your Agents a Brain</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,12 +13,12 @@
     --bg3: #f1f5f9;
     --bg-dark: #3B5069;
     --brand-orange: #E18A4F;
-    --purple: #E18A4F; /* Redirected */
-    --blue: #3B5069; /* Redirected */
+    --purple: #E18A4F;
+    --blue: #3B5069;
     --cyan: #0ea5e9;
     --cyan2: #0284c7;
     --card: #ffffff;
-    --card-border: rgba(0,0,0,0.08);
+    --card-border: rgba(0,0,0,0.06);
     --card-border-hover: rgba(225, 138, 79, 0.4);
     --text: #0f172a;
     --text2: #475569;
@@ -39,7 +39,6 @@
     overflow-x: hidden;
     line-height: 1.6;
   }
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg2); }
   ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
@@ -48,1615 +47,872 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2rem;
-    height: 64px;
+    padding: 0 2rem; height: 64px;
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: 50px; margin: 1rem 2rem; width: calc(100% - 4rem);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border-radius: 50px; margin: 1rem 2rem; width: calc(100% - 4rem);
   }
   .nav-logo {
     font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo .brand {
     background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  .nav-logo span { color: var(--text2); font-weight: 300; margin: 0 0.4rem; }
+  .nav-logo .sep { color: var(--text3); font-weight: 300; margin: 0 0.15rem; -webkit-text-fill-color: initial; }
+  .nav-logo .partner { color: var(--text); font-weight: 800; -webkit-text-fill-color: initial; }
   .nav-links { display: flex; align-items: center; gap: 2rem; }
   .nav-links a {
     color: var(--text3); text-decoration: none; font-size: 0.9rem; font-weight: 500;
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--text); }
+  .nav-links a.nav-current { color: var(--brand-orange); font-weight: 700; }
+  .nav-hamburger {
+    display: none; background: none; border: none; cursor: pointer;
+    width: 32px; height: 32px; color: var(--text);
+  }
+  .nav-mobile {
+    display: none; position: absolute; top: 72px; right: 0; left: 0;
+    background: rgba(255,255,255,0.98); backdrop-filter: blur(20px);
+    border-radius: 16px; padding: 1rem; flex-direction: column; gap: 0.5rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 1px solid var(--card-border);
+  }
+  .nav-mobile.open { display: flex; }
+  .nav-mobile a {
+    display: block; padding: 0.75rem 1rem; color: var(--text2); text-decoration: none;
+    font-weight: 500; border-radius: 8px; transition: background 0.2s;
+  }
+  .nav-mobile a:hover { background: var(--bg3); color: var(--text); }
+
+  /* ─── BUTTONS ─────────────────────────── */
   .btn {
     display: inline-flex; align-items: center; gap: 0.5rem;
     padding: 0.55rem 1.25rem; border-radius: 8px; border: none;
     font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600;
     cursor: pointer; transition: all 0.2s; text-decoration: none;
   }
-  .btn-grad {
-    background: var(--grad); color: white;
-    box-shadow: 0 0 20px rgba(124,58,237,0.35);
-  }
-  .btn-grad:hover { transform: translateY(-1px); box-shadow: 0 4px 30px rgba(124,58,237,0.55); }
-  .btn-outline {
-    background: transparent; color: var(--text);
-    border: 1px solid var(--card-border);
-  }
+  .btn-grad { background: var(--brand-orange); color: white; }
+  .btn-grad:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(225,138,79,0.35); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--card-border); }
   .btn-outline:hover { border-color: var(--purple); color: var(--purple); }
-  .btn-cyan {
-    background: linear-gradient(135deg, #06b6d4, #0891b2); color: white;
-    box-shadow: 0 0 20px rgba(6,182,212,0.35);
+  .btn-lg { padding: 0.85rem 2rem; font-size: 1rem; border-radius: 12px; }
+
+  /* ─── SECTIONS ────────────────────────── */
+  .section { padding: 6rem 2rem; }
+  .section-bg { background: var(--bg); }
+  .section-bg2 { background: var(--bg2); }
+  .section-bg3 { background: var(--bg3); }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .section-tag {
+    display: inline-block; font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-orange);
+    margin-bottom: 0.75rem;
   }
-  .btn-cyan:hover { transform: translateY(-1px); box-shadow: 0 4px 30px rgba(6,182,212,0.55); }
+  .section-title {
+    font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em;
+    line-height: 1.15; margin-bottom: 1rem; color: var(--text);
+  }
+  .section-sub {
+    font-size: 1.1rem; color: var(--text2); max-width: 680px;
+    line-height: 1.7; margin-bottom: 3rem;
+  }
+  .section-center { text-align: center; }
+  .section-center .section-sub { margin-left: auto; margin-right: auto; }
 
   /* ─── HERO ────────────────────────────── */
   #hero {
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 100px 2rem 4rem;
+    padding: 120px 2rem 4rem;
     text-align: center;
     position: relative; overflow: hidden;
   }
   .hero-bg {
     position: absolute; inset: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.18) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 40% at 80% 60%, rgba(37,99,235,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 20% 70%, rgba(6,182,212,0.08) 0%, transparent 60%);
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(225,138,79,0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 80% 60%, rgba(59,80,105,0.1) 0%, transparent 60%);
   }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.35rem 1rem; border-radius: 50px;
-    background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
-    font-size: 0.8rem; font-weight: 600; color: #a78bfa;
-    margin-bottom: 1.5rem;
+    background: rgba(225,138,79,0.1); color: var(--brand-orange);
+    padding: 0.4rem 1.2rem; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 1.5rem;
     animation: fadeInDown 0.6s ease;
   }
-  .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; animation: pulse 2s infinite; }
   .hero-title {
-    font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 900;
-    letter-spacing: -0.03em; line-height: 1.1;
-    margin-bottom: 1.25rem;
+    font-size: 3.8rem; font-weight: 900; letter-spacing: -0.04em;
+    line-height: 1.05; margin-bottom: 1.25rem; max-width: 800px;
     animation: fadeInUp 0.7s ease;
   }
-  .hero-title .grad {
-    background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  .hero-sub {
+    font-size: 1.2rem; color: var(--text2); max-width: 620px;
+    line-height: 1.75; margin-bottom: 2.5rem;
+    animation: fadeInUp 0.8s ease;
   }
-  .hero-subtitle {
-    max-width: 600px; font-size: 1.15rem; color: var(--text2); font-weight: 400;
-    margin-bottom: 2.5rem; animation: fadeInUp 0.8s ease;
+  .hero-ctas {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.9s ease;
   }
-  .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem; animation: fadeInUp 0.9s ease; }
-  .stats-bar {
-    display: flex; gap: 2.5rem; flex-wrap: wrap; justify-content: center;
-    padding: 1.25rem 2.5rem;
+  .hero-stats {
+    display: flex; align-items: center; gap: 2rem;
     background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 16px; backdrop-filter: blur(12px);
+    border-radius: 16px; padding: 1.25rem 2.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
     animation: fadeInUp 1s ease;
   }
-  .stat-item { text-align: center; }
-  .stat-value { font-size: 1.5rem; font-weight: 800; background: var(--grad2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .stat-label { font-size: 0.78rem; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+  .hero-stat { text-align: center; }
+  .hero-stat .val { font-size: 1rem; font-weight: 800; color: var(--text); display: block; }
+  .hero-stat .lbl { font-size: 0.7rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+  .hero-stat-sep { width: 1px; height: 32px; background: var(--card-border); }
 
-  /* ─── SECTION BASE ────────────────────── */
-  section { padding: 5rem 2rem; }
-  .container { max-width: 1200px; margin: 0 auto; }
-  .section-tag {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--cyan); margin-bottom: 1rem;
-  }
-  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; background: var(--cyan); }
-  .section-title { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
-  .section-sub { font-size: 1.05rem; color: var(--text2); max-width: 520px; }
-
-  /* ─── DEMO SECTION ────────────────────── */
-  #demo { background: var(--bg2); }
-  .demo-header { text-align: center; margin-bottom: 3rem; }
-  .demo-header .section-tag { justify-content: center; }
-  .demo-header .section-tag::before { display: none; }
-  .demo-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-  .demo-panel {
+  /* ─── CARDS ───────────────────────────── */
+  .card {
     background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 16px; overflow: hidden;
-    transition: border-color 0.3s;
+    border-radius: 16px; padding: 2rem;
+    transition: all 0.3s ease;
   }
-  .demo-panel.panel-bad { border-color: rgba(239,68,68,0.2); }
-  .demo-panel.panel-good { border-color: rgba(16,185,129,0.2); }
-  .demo-panel-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: 50px; margin: 1rem 2rem; width: calc(100% - 4rem);
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-border-hover);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
   }
-  .panel-title {
-    font-size: 0.85rem; font-weight: 700;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .panel-bad .panel-title { color: #f87171; }
-  .panel-good .panel-title { color: #34d399; }
-  .timer-badge {
-    font-family: var(--mono); font-size: 0.8rem; font-weight: 600;
-    padding: 0.25rem 0.6rem; border-radius: 6px;
-  }
-  .timer-bad { background: rgba(239,68,68,0.1); color: #f87171; }
-  .timer-good { background: rgba(16,185,129,0.1); color: #34d399; }
-  .demo-body { padding: 1.25rem; min-height: 280px; position: relative; }
-  .browser-tabs {
-    display: flex; flex-wrap: wrap; gap: 0.4rem;
-    margin-bottom: 1rem;
-  }
-  .browser-tab {
-    font-size: 0.7rem; padding: 0.3rem 0.7rem; border-radius: 6px;
-    background: rgba(0,0,0,0.03); color: var(--text3);
-    border: 1px solid rgba(0,0,0,0.05);
-    opacity: 0; transition: opacity 0.4s;
-    display: flex; align-items: center; gap: 0.3rem;
-  }
-  .browser-tab.open { opacity: 1; }
-  .browser-tab .spinner { width: 8px; height: 8px; border: 1.5px solid rgba(255,255,255,0.15); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
-  .html-output {
-    font-family: var(--mono); font-size: 0.7rem; color: var(--text3);
-    background: #f8fafc; border-radius: 8px; padding: 0.75rem;
-    overflow: hidden; line-height: 1.5; max-height: 150px;
-    border: 1px solid rgba(0,0,0,0.03);
-  }
-  .html-output .tag { color: #f87171; }
-  .html-output .attr { color: #fbbf24; }
-  .html-output .val { color: #a78bfa; }
-  .api-call {
-    font-family: var(--mono); font-size: 0.78rem;
-    background: #f8fafc; border-radius: 8px;
-    padding: 0.85rem; margin-bottom: 0.85rem;
-    border: 1px solid rgba(6,182,212,0.15);
-  }
-  .api-call .method { color: var(--cyan); font-weight: 700; }
-  .api-call .endpoint { color: var(--text); }
-  .api-call .key { color: #a78bfa; }
-  .api-call .string { color: #34d399; }
-  .json-response {
-    font-family: var(--mono); font-size: 0.72rem;
-    background: #f8fafc; border-radius: 8px;
-    padding: 0.85rem; border: 1px solid rgba(16,185,129,0.15);
-    line-height: 1.7; color: var(--text2);
-    opacity: 0; transition: opacity 0.5s;
-  }
-  .json-response.visible { opacity: 1; }
-  .json-response .key { color: #93c5fd; }
-  .json-response .str { color: #86efac; }
-  .json-response .num { color: #fca5a5; }
-  .json-response .bool { color: #fde68a; }
-  .demo-center { text-align: center; }
-  .query-display {
-    display: inline-flex; align-items: center; gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
-    background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25);
-    border-radius: 12px; font-size: 0.9rem; color: var(--text2);
-    margin-bottom: 1.5rem;
-  }
-  .query-display .icon { color: var(--purple); }
-  .demo-overlay {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(10,10,15,0.5);
-    font-size: 0.9rem; color: var(--text3);
-    border-radius: 0 0 16px 16px;
-  }
-  .demo-running .demo-overlay { display: none; }
-
-  /* ─── DASHBOARD ───────────────────────── */
-  #dashboard { background: var(--bg3); }
-  .dash-layout { display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; }
-  .dash-sidebar {
-    background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 16px; padding: 1rem; height: fit-content;
-  }
-  .sidebar-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 0.75rem; padding: 0 0.25rem; }
-  .agent-item {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.6rem 0.75rem; border-radius: 10px; cursor: pointer;
-    transition: background 0.2s; margin-bottom: 0.25rem;
-  }
-  .agent-item:hover, .agent-item.active { background: rgba(124,58,237,0.12); }
-  .agent-item.active { border: 1px solid rgba(124,58,237,0.25); }
-  .agent-avatar {
-    width: 32px; height: 32px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; font-weight: 700; flex-shrink: 0;
-  }
-  .agent-name { font-size: 0.85rem; font-weight: 600; }
-  .agent-status { font-size: 0.7rem; color: var(--text3); }
-  .agent-status.live { color: var(--success); }
-  .dash-main { display: flex; flex-direction: column; gap: 1.25rem; }
-  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-  .stat-card {
-    background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 14px; padding: 1.25rem;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .stat-card:hover { border-color: rgba(124,58,237,0.35); transform: translateY(-2px); }
-  .stat-card-label { font-size: 0.75rem; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
-  .stat-card-value { font-size: 1.6rem; font-weight: 800; }
-  .stat-card-change { font-size: 0.75rem; color: var(--success); margin-top: 0.25rem; }
-  .query-feed-card {
-    background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 16px; overflow: hidden;
-  }
-  .feed-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 1.25rem; border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: 50px; margin: 1rem 2rem; width: calc(100% - 4rem);
-  }
-  .feed-title { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-  .live-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--success);
-    box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite;
-  }
-  .feed-count { font-size: 0.78rem; color: var(--text3); }
-  .query-table { width: 100%; border-collapse: collapse; }
-  .query-table th {
-    font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.07em; color: var(--text3);
-    padding: 0.6rem 1rem; text-align: left;
-    border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: 50px; margin: 1rem 2rem; width: calc(100% - 4rem);
-  }
-  .query-table td { padding: 0.75rem 1rem; font-size: 0.82rem; border-bottom: 1px solid rgba(0,0,0,0.02); vertical-align: middle; }
-  .query-table tr:last-child td { border-bottom: none; }
-  .query-table tr { transition: background 0.2s; }
-  .query-table tr:hover { background: rgba(255,255,255,0.02); }
-  .query-text { font-weight: 500; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .dataset-badge {
-    font-size: 0.7rem; padding: 0.2rem 0.55rem; border-radius: 6px;
-    background: rgba(124,58,237,0.12); color: #a78bfa;
-    border: 1px solid rgba(124,58,237,0.2); white-space: nowrap;
-  }
-  .time-badge { font-family: var(--mono); font-size: 0.78rem; color: var(--cyan); }
-  .cost-badge { font-family: var(--mono); font-size: 0.78rem; color: #fbbf24; }
-  .status-hit { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 700; color: var(--success); }
-  .status-miss { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 700; color: var(--warning); }
-  .new-row { animation: slideIn 0.4s ease; }
-  @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-
-  /* ─── MARKETPLACE ─────────────────────── */
-  #marketplace { background: var(--bg2); }
-  .market-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; }
-  .market-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .filter-btn {
-    padding: 0.4rem 1rem; border-radius: 20px; border: 1px solid var(--card-border);
-    background: var(--card); color: var(--text2); font-size: 0.8rem; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .filter-btn.active, .filter-btn:hover {
-    border-color: var(--purple); background: rgba(124,58,237,0.12); color: var(--text);
-  }
-  .dataset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
-  .dataset-card {
-    background: var(--card); border: 1px solid var(--card-border);
-    border-radius: 16px; padding: 1.5rem;
-    transition: all 0.25s; cursor: pointer;
-    position: relative; overflow: hidden;
-  }
-  .dataset-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: var(--grad); opacity: 0; transition: opacity 0.3s;
-    border-radius: 16px;
-  }
-  .dataset-card:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(124,58,237,0.15); }
-  .dataset-card:hover::before { opacity: 0.04; }
-  .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
   .card-icon {
-    width: 44px; height: 44px; border-radius: 12px;
+    width: 48px; height: 48px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.25rem; flex-shrink: 0;
+    margin-bottom: 1.25rem;
   }
-  .card-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; }
-  .agent-ready-badge {
-    font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
-    padding: 0.2rem 0.55rem; border-radius: 5px;
-    background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(124,58,237,0.15));
-    border: 1px solid rgba(6,182,212,0.3); color: var(--cyan2);
+  .card-icon svg { width: 24px; height: 24px; }
+  .card-icon-orange { background: rgba(225,138,79,0.12); color: var(--brand-orange); }
+  .card-icon-green { background: rgba(16,185,129,0.12); color: var(--success); }
+  .card-icon-cyan { background: rgba(14,165,233,0.12); color: var(--cyan); }
+  .card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .card p { color: var(--text2); font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem; }
+  .card .use-case { font-style: italic; color: var(--text3); font-size: 0.88rem; line-height: 1.65; margin-bottom: 1rem; }
+  .card .stat-line {
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+    color: var(--brand-orange); padding-top: 0.75rem;
+    border-top: 1px solid var(--card-border);
   }
-  .freshness { font-size: 0.7rem; color: var(--text3); }
-  .card-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
-  .card-category { font-size: 0.75rem; color: var(--text3); margin-bottom: 0.85rem; }
-  .card-stats { display: flex; align-items: center; justify-content: space-between; }
-  .card-queries { font-size: 0.78rem; color: var(--text3); }
-  .card-price { font-size: 0.88rem; font-weight: 700; color: #fbbf24; }
 
-  /* ─── AGENTSKILL ──────────────────────── */
-  #agentskill { background: var(--bg-dark); color: var(--text-dark); }
-  .skill-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: start; }
-  .skill-steps { display: flex; flex-direction: column; gap: 1.5rem; }
-  .skill-step { display: flex; gap: 1rem; }
-  .step-num {
-    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-    background: var(--grad); display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.9rem;
+  /* ─── FEATURE GRID ────────────────────── */
+  .feature-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
   }
-  .step-content .step-title { font-weight: 700; margin-bottom: 0.25rem; }
-  .step-content .step-desc { font-size: 0.875rem; color: var(--text2); }
-  .code-block-wrapper { position: relative; }
+
+  /* ─── INSTALL SECTION ─────────────────── */
+  .install-layout {
+    display: grid; grid-template-columns: 1fr 1.3fr;
+    gap: 3rem; align-items: start;
+  }
+  .install-steps { display: flex; flex-direction: column; gap: 2rem; }
+  .install-step {
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .step-num {
+    width: 36px; height: 36px; min-width: 36px;
+    border-radius: 50%; background: var(--grad); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.85rem;
+  }
+  .step-content h4 { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.35rem; }
+  .step-content p { color: var(--text2); font-size: 0.9rem; line-height: 1.6; }
+  .step-content code {
+    font-family: var(--mono); font-size: 0.82rem; background: var(--bg3);
+    padding: 0.15rem 0.5rem; border-radius: 4px; color: var(--brand-orange);
+  }
+
+  /* ─── FRAMEWORK LOGOS ─────────────────── */
+  .framework-logos {
+    display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
+    align-items: center; justify-content: flex-start;
+  }
+  .fw-logo {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.4rem 0.9rem; border-radius: 50px; font-size: 0.78rem;
+    font-weight: 600; color: var(--text3); background: var(--bg3);
+    border: 1px solid transparent; transition: all 0.2s;
+  }
+  .fw-logo.primary {
+    background: rgba(225,138,79,0.1); color: var(--brand-orange);
+    border-color: rgba(225,138,79,0.3);
+  }
+
+  /* ─── CODE BLOCK ──────────────────────── */
+  .code-block {
+    background: #1e293b; border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
   .code-tabs {
-    display: flex; gap: 0;
-    border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: 50px; margin: 1rem 2rem; width: calc(100% - 4rem);
-    background: #f8fafc;
-    border-radius: 14px 14px 0 0;
-    overflow: hidden;
+    display: flex; border-bottom: 1px solid rgba(255,255,255,0.08);
+    overflow-x: auto;
   }
   .code-tab {
-    padding: 0.6rem 1.1rem; font-size: 0.8rem; font-weight: 600;
-    cursor: pointer; border: none; background: transparent; color: var(--text3);
-    transition: all 0.2s; font-family: 'Inter', sans-serif;
-    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1.25rem; background: none; border: none;
+    color: rgba(255,255,255,0.5); font-family: var(--mono); font-size: 0.8rem;
+    font-weight: 500; cursor: pointer; transition: all 0.2s;
+    border-bottom: 2px solid transparent; white-space: nowrap;
   }
-  .code-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); background: rgba(6,182,212,0.05); }
-  .code-tab:hover:not(.active) { color: var(--text2); }
-  .code-content {
-    background: #0d1117; border: 1px solid var(--card-border);
-    border-top: none; border-radius: 0 0 14px 14px;
-    position: relative; overflow: hidden;
-  }
-  .code-pane { display: none; padding: 1.5rem; }
-  .code-pane.active { display: block; }
-  .code-pane pre {
-    font-family: var(--mono); font-size: 0.8rem; line-height: 1.8;
-    overflow-x: auto; white-space: pre;
+  .code-tab:hover { color: rgba(255,255,255,0.8); }
+  .code-tab.active { color: var(--brand-orange); border-bottom-color: var(--brand-orange); }
+  .code-panel { display: none; position: relative; }
+  .code-panel.active { display: block; }
+  .code-panel pre {
+    padding: 1.5rem; overflow-x: auto; font-family: var(--mono);
+    font-size: 0.82rem; line-height: 1.8; color: #e2e8f0;
   }
   .copy-btn {
     position: absolute; top: 0.75rem; right: 0.75rem;
-    padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.72rem; font-weight: 600;
-    background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.08);
-    color: var(--text2); cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; padding: 0.35rem 0.65rem; cursor: pointer;
+    color: rgba(255,255,255,0.5); font-size: 0.72rem; font-family: var(--mono);
+    transition: all 0.2s;
   }
-  .copy-btn:hover { background: rgba(0,0,0,0.08); color: var(--text); }
-  .copy-btn.copied { color: var(--success); border-color: rgba(16,185,129,0.4); }
-  /* Syntax colors */
-  .kw { color: #ff79c6; } .fn { color: #50fa7b; } .str { color: #f1fa8c; }
-  .cm { color: #6272a4; font-style: italic; } .var { color: #8be9fd; }
-  .prop { color: #bd93f9; } .num { color: #ffb86c; } .op { color: #ff79c6; }
-  .cls { color: #8be9fd; } .tag2 { color: #ff5555; }
+  .copy-btn:hover { background: rgba(255,255,255,0.15); color: white; }
 
-  /* ─── FLYWHEEL ────────────────────────── */
-  #flywheel { background: var(--bg-dark); color: var(--text-dark); }
-  .flywheel-container {
-    display: flex; align-items: center; justify-content: center;
-    gap: 0; flex-wrap: wrap;
+  /* Syntax highlight */
+  .kw { color: #f472b6; }
+  .fn { color: #4ade80; }
+  .str { color: #fbbf24; }
+  .cm { color: #64748b; font-style: italic; }
+  .var { color: #22d3ee; }
+  .prop { color: #c084fc; }
+  .num { color: #fb923c; }
+  .op { color: #f472b6; }
+  .cls { color: #22d3ee; }
+
+  /* ─── USE CASES ───────────────────────── */
+  .usecase-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
   }
-  .flywheel-wrapper { position: relative; width: 480px; height: 480px; flex-shrink: 0; }
-  .flywheel-info { max-width: 380px; padding: 2rem; }
-  .flywheel-list { list-style: none; display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1.5rem; }
-  .flywheel-list li {
-    display: flex; align-items: flex-start; gap: 0.85rem;
-    padding: 0.85rem 1rem; border-radius: 12px;
+  .usecase-card {
     background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 2rem;
+    transition: all 0.3s ease;
   }
-  .fl-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
-  .fl-title { font-weight: 700; font-size: 0.9rem; }
-  .fl-desc { font-size: 0.8rem; color: var(--text2); }
-  svg.flywheel {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    overflow: visible;
+  .usecase-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-border-hover);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
   }
-  .fw-node {
-    cursor: pointer; transition: filter 0.2s;
+  .usecase-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--bg3); color: var(--brand-orange);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.85rem; margin-bottom: 1rem;
   }
-  .fw-node:hover { filter: brightness(1.3); }
+  .usecase-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .usecase-card p { color: var(--text2); font-size: 0.92rem; line-height: 1.7; margin-bottom: 1rem; }
+  .usecase-result {
+    font-weight: 700; font-size: 0.9rem; color: var(--brand-orange);
+    padding-top: 0.75rem; border-top: 1px solid var(--card-border);
+  }
+
+  /* ─── TECHNICAL GRID ──────────────────── */
+  .tech-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  .tech-item {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 1.25rem 1.5rem;
+    transition: all 0.2s;
+  }
+  .tech-item:hover { border-color: var(--card-border-hover); }
+  .tech-item strong {
+    color: var(--text); font-weight: 700; font-size: 0.92rem;
+  }
+  .tech-item p {
+    color: var(--text2); font-size: 0.88rem; line-height: 1.6; margin-top: 0.3rem;
+  }
+  .tech-item a { color: var(--brand-orange); text-decoration: none; font-weight: 600; }
+  .tech-item a:hover { text-decoration: underline; }
+
+  /* ─── ECOSYSTEM GRID ──────────────────── */
+  .eco-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .eco-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 2rem; position: relative;
+    transition: all 0.3s ease;
+  }
+  .eco-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-border-hover);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+  }
+  .eco-card.featured { border-color: var(--brand-orange); }
+  .eco-badge {
+    position: absolute; top: -10px; right: 1rem;
+    background: var(--grad); color: white;
+    padding: 0.2rem 0.75rem; border-radius: 50px;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .eco-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .eco-card p { color: var(--text2); font-size: 0.92rem; line-height: 1.65; margin-bottom: 1rem; }
+  .eco-cmd {
+    font-family: var(--mono); font-size: 0.8rem; color: var(--brand-orange);
+    background: var(--bg3); padding: 0.5rem 0.75rem; border-radius: 8px;
+    display: block;
+  }
+
+  /* ─── FOOTER CTA ──────────────────────── */
+  .footer-cta {
+    text-align: center; padding: 5rem 2rem;
+    background: var(--bg-dark);
+  }
+  .footer-cta h2 {
+    color: var(--text-dark); font-size: 2.2rem; font-weight: 800;
+    margin-bottom: 2rem; letter-spacing: -0.02em;
+  }
+  .install-cmd {
+    display: inline-flex; align-items: center; gap: 1rem;
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 1rem 1.5rem; cursor: pointer;
+    transition: all 0.2s; margin-bottom: 1rem;
+  }
+  .install-cmd:hover { background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.2); }
+  .install-cmd code {
+    font-family: var(--mono); font-size: 0.9rem; color: #e2e8f0;
+  }
+  .install-cmd .copy-icon { color: rgba(255,255,255,0.5); transition: color 0.2s; }
+  .install-cmd:hover .copy-icon { color: white; }
+  .install-alt {
+    color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: 0.5rem;
+  }
+  .install-alt code {
+    font-family: var(--mono); font-size: 0.82rem; color: rgba(255,255,255,0.7);
+  }
+  .footer-cta-links {
+    display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;
+  }
+  .footer-cta-links a {
+    color: var(--brand-orange); text-decoration: none; font-weight: 600;
+    font-size: 0.92rem; transition: opacity 0.2s;
+  }
+  .footer-cta-links a:hover { opacity: 0.8; }
 
   /* ─── FOOTER ──────────────────────────── */
   footer {
-    background: var(--bg);
-    border-top: 1px solid var(--card-border);
-    padding: 3rem 2rem 1.5rem;
+    background: #1e293b; color: rgba(255,255,255,0.7); padding: 4rem 2rem 2rem;
   }
-  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
-  .footer-brand .logo { font-size: 1.2rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.75rem; }
-  .footer-brand p { font-size: 0.85rem; color: var(--text3); max-width: 220px; line-height: 1.6; }
-  .footer-col h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 0.85rem; }
-  .footer-col a { display: block; font-size: 0.85rem; color: var(--text3); text-decoration: none; margin-bottom: 0.5rem; transition: color 0.2s; }
-  .footer-col a:hover { color: var(--text); }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem; max-width: 1200px; margin: 0 auto;
+    padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-brand h4 {
+    font-size: 1.1rem; font-weight: 800; color: white; margin-bottom: 0.75rem;
+  }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.5); }
+  .footer-col h5 {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: rgba(255,255,255,0.4); margin-bottom: 1rem;
+  }
+  .footer-col a {
+    display: block; color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 0.88rem; padding: 0.3rem 0; transition: color 0.2s;
+  }
+  .footer-col a:hover { color: white; }
   .footer-bottom {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-top: 1.5rem; border-top: 1px solid var(--card-border);
-    font-size: 0.8rem; color: var(--text3);
+    max-width: 1200px; margin: 0 auto; padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.35);
   }
-  .powered-badge {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.3rem 0.75rem; border-radius: 20px;
-    background: rgba(0,0,0,0.02); border: 1px solid var(--card-border);
-  }
-  .powered-badge .inai { color: #fbbf24; font-weight: 700; }
-  .powered-badge .walrus { color: var(--cyan); font-weight: 700; }
 
   /* ─── ANIMATIONS ──────────────────────── */
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes fadeInDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes flowDash { from { stroke-dashoffset: 800; } to { stroke-dashoffset: 0; } }
-  @keyframes rotateCW { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @keyframes counterBounce { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
-  @keyframes glow { 0%,100% { filter: drop-shadow(0 0 8px rgba(124,58,237,0.5)); } 50% { filter: drop-shadow(0 0 20px rgba(124,58,237,0.9)); } }
-  .flow-path {
-    stroke-dasharray: 12 6;
-    animation: flowDash 4s linear infinite;
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .flow-path-2 {
-    stroke-dasharray: 12 6;
-    animation: flowDash 4s linear infinite reverse;
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .fw-ring {
-    animation: rotateCW 20s linear infinite;
-    transform-origin: 240px 240px;
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
   }
-  /* Stat counter animation */
-  .count-up { animation: counterBounce 0.5s ease; }
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
 
   /* ─── RESPONSIVE ──────────────────────── */
   @media (max-width: 960px) {
-    .demo-panels { grid-template-columns: 1fr; }
-    .dash-layout { grid-template-columns: 1fr; }
-    .skill-layout { grid-template-columns: 1fr; }
-    .flywheel-container { flex-direction: column; align-items: center; }
-    .flywheel-wrapper { width: 340px; height: 340px; }
+    .feature-grid, .usecase-grid, .eco-grid { grid-template-columns: 1fr; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .install-layout { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-title { font-size: 2.8rem; }
+    .section-title { font-size: 2rem; }
+    .hero-stats { flex-wrap: wrap; gap: 1.25rem; padding: 1rem 1.5rem; }
   }
   @media (max-width: 640px) {
+    nav { margin: 0.5rem 0.75rem; width: calc(100% - 1.5rem); padding: 0 1rem; }
     .nav-links { display: none; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav-hamburger { display: flex; align-items: center; justify-content: center; }
+    .hero-title { font-size: 2rem; }
+    .hero-sub { font-size: 1rem; }
+    .section { padding: 4rem 1.25rem; }
+    .section-title { font-size: 1.6rem; }
+    .section-sub { font-size: 0.95rem; }
+    .hero-stats { flex-direction: column; gap: 0.75rem; }
+    .hero-stat-sep { width: 40px; height: 1px; }
     .footer-grid { grid-template-columns: 1fr; }
-    .stats-bar { gap: 1.5rem; padding: 1rem 1.5rem; }
-    .market-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .hero-ctas { flex-direction: column; align-items: center; }
+    .install-layout { gap: 2rem; }
+    .framework-logos { justify-content: center; }
+    .footer-cta h2 { font-size: 1.6rem; }
+    .footer-cta-links { flex-direction: column; align-items: center; gap: 1rem; }
   }
-  /* Particle background on hero */
-  .particle-canvas { position: absolute; inset: 0; pointer-events: none; opacity: 0.35; }
-  /* Glow effects */
-  .glow-purple { text-shadow: 0 0 30px rgba(124,58,237,0.5); }
-  .gradient-text { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .gradient-text-cyan { background: var(--grad2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  /* Token chip */
-  .token-chip {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 6px;
-    background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1));
-    border: 1px solid rgba(251,191,36,0.25); color: #fbbf24;
+  @media (max-width: 380px) {
+    .hero-title { font-size: 1.7rem; }
+    nav { padding: 0 0.75rem; height: 56px; }
+    .nav-logo { font-size: 1.05rem; }
+    .btn-lg { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
+    .install-cmd code { font-size: 0.75rem; }
   }
-  /* Connecting lines for demo */
-  .versus-divider {
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.9rem; color: var(--text3);
-    position: relative;
-  }
-  .versus-circle {
-    width: 40px; height: 40px; border-radius: 50%;
-    border: 2px solid var(--card-border);
-    display: flex; align-items: center; justify-content: center;
-    background: var(--bg2); font-size: 0.7rem; font-weight: 800; color: var(--text3);
-    flex-shrink: 0;
-  }
-  /* Loading bar */
-  .loading-bar-wrap { background: rgba(255,255,255,0.06); border-radius: 4px; height: 5px; overflow: hidden; margin: 0.5rem 0; }
-  .loading-bar { height: 100%; border-radius: 4px; width: 0%; transition: width 0.1s linear; }
-  .loading-bar-bad { background: linear-gradient(90deg, #ef4444, #f87171); }
-  .loading-bar-good { background: linear-gradient(90deg, #10b981, #34d399); }
-
-  #agentskill .section-title, #flywheel .section-title { color: var(--text-dark); }
-  #agentskill .section-sub, #flywheel .section-sub { color: #cbd5e1; }
-  #agentskill .step-content .step-title { color: var(--text-dark); }
-  #agentskill .step-content .step-desc { color: #cbd5e1; }
-  #flywheel .fl-title { color: var(--text-dark); }
-  #flywheel .fl-desc { color: #cbd5e1; }
-  #flywheel .flywheel-list li { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
-  #agentskill .code-content { background: #0f172a; }
-  #agentskill .code-tabs { background: #1e293b; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .demo-overlay { background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); }
-
-
-  /* --- MODERN FLYWHEEL --- */
-  .modern-flywheel-wrapper {
-    position: relative; width: 440px; height: 440px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto;
-  }
-  .mf-center {
-    position: relative; width: 140px; height: 140px;
-    display: flex; align-items: center; justify-content: center;
-    z-index: 10;
-  }
-  .mf-pulse {
-    position: absolute; inset: -40px; border-radius: 50%;
-    border: 2px solid rgba(225,138,79, 0.3);
-    animation: mfPulse 3s infinite ease-out;
-  }
-  .mf-pulse-2 { inset: -20px; animation-delay: 1.5s; }
-  @keyframes mfPulse {
-    0% { transform: scale(0.7); opacity: 0.8; }
-    100% { transform: scale(1.6); opacity: 0; }
-  }
-  .mf-avatar-container {
-    width: 120px; height: 120px;
-    background: radial-gradient(circle at 30% 30%, #1e293b, #0f172a);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(225,138,79,0.2);
-    position: relative; z-index: 2;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .mf-orbit-svg {
-    position: absolute; inset: -30px; width: calc(100% + 60px); height: calc(100% + 60px);
-    pointer-events: none; z-index: 1;
-    animation: spinSlow 30s linear infinite;
-  }
-  @keyframes spinSlow { to { transform: rotate(360deg); } }
-  .mf-node {
-    position: absolute;
-    width: auto; white-space: nowrap;
-    background: rgba(15,23,42, 0.7); backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 0.75rem 1.25rem; border-radius: 100px;
-    display: flex; align-items: center; gap: 0.75rem;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    z-index: 5; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-    cursor: pointer;
-  }
-  .mf-node:hover { border-color: rgba(225,138,79,0.6); box-shadow: 0 12px 40px rgba(225,138,79,0.25); }
-  .node-top { top: 0; left: 50%; transform: translateX(-50%); }
-  .node-top:hover { transform: translateX(-50%) translateY(-5px) scale(1.05); }
-  .node-right { top: 50%; right: -15%; transform: translateY(-50%); }
-  .node-right:hover { transform: translateY(-50%) translateY(-5px) scale(1.05); }
-  .node-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
-  .node-bottom:hover { transform: translateX(-50%) translateY(-5px) scale(1.05); }
-  .node-left { top: 50%; left: -15%; transform: translateY(-50%); }
-  .node-left:hover { transform: translateY(-50%) translateY(-5px) scale(1.05); }
-
-  .mf-icon {
-    width: 38px; height: 38px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; color: white;
-  }
-  .mf-text { font-size: 0.9rem; font-weight: 700; color: #f8fafc; letter-spacing: 0.02em; line-height: 1.2;}
-  .mf-sub { font-size: 0.7rem; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-top:2px;}
-
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     NAVIGATION
-============================================================ -->
+<!-- ─── NAV ──────────────────────────── -->
 <nav>
-  <div class="nav-logo" style="display:flex; align-items:center; gap:0.5rem;"><img src="inflectiv logo_white (1).png" alt="Inflectiv" style="height: 24px; filter: invert(0.8) sepia(1) hue-rotate(180deg) saturate(2) brightness(0.3) contrast(1.2);"> <span style="color:var(--text); font-weight:800; font-size:1.2rem;">× OpenClaw</span></div>
-  <div class="nav-links">
-    <a href="#dashboard">Dashboard</a>
-    <a href="#marketplace">Marketplace</a>
-    <a href="#agentskill">AgentSkill</a>
-    <a href="#flywheel">Docs</a>
+  <div class="nav-logo">
+    <img src="inflectiv logo_white (1).png" alt="Inflectiv" style="height: 24px; filter: invert(0.8) sepia(1) hue-rotate(180deg) saturate(2) brightness(0.3) contrast(1.2);">
+    <span class="sep">&times;</span>
+    <span class="partner">OpenClaw</span>
   </div>
-  <button class="btn btn-grad" onclick="showConnectModal()">⚡ Connect OpenClaw</button>
+  <div class="nav-links">
+    <a href="index.html" class="nav-current">Vault</a>
+    <a href="vinn.html">Network</a>
+    <a href="amps.html">AMPS Standard</a>
+    <a href="#">GitHub</a>
+  </div>
+  <div style="display:flex; align-items:center; gap:0.5rem;">
+    <a href="#install" class="btn btn-grad" style="border-radius:50px">Install</a>
+    <button class="nav-hamburger" aria-label="Menu" onclick="document.querySelector('.nav-mobile').classList.toggle('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile">
+    <a href="index.html">Vault</a>
+    <a href="vinn.html">Network</a>
+    <a href="amps.html">AMPS Standard</a>
+    <a href="#">GitHub</a>
+  </div>
 </nav>
 
-<!-- ============================================================
-     HERO
-============================================================ -->
+<!-- ─── HERO ─────────────────────────── -->
 <section id="hero">
   <div class="hero-bg"></div>
-  <canvas class="particle-canvas" id="particleCanvas"></canvas>
-
-  <div class="hero-badge">
-    <div class="dot"></div>
-    Backed by OpenAI · 140K GitHub Stars · Official Integration
-  </div>
-
-  <h1 class="hero-title">
-    The <span class="grad">Intelligence Layer</span><br>for OpenClaw Agents
-  </h1>
-  <p class="hero-subtitle">
-    Stop browsing. Start knowing. Inflectiv gives your OpenClaw agents instant access to structured, verified intelligence — saving 10× time and cost.
-  </p>
+  <div class="hero-badge">OPEN SOURCE &middot; MIT LICENSED &middot; INSTALL IN 30 SECONDS</div>
+  <h1 class="hero-title">Your OpenClaw agents forget everything.</h1>
+  <p class="hero-sub">Every time your agent restarts, it starts from zero. No memory of yesterday's research. No saved credentials. No learned preferences. You're paying for the same work twice.</p>
   <div class="hero-ctas">
-    <a href="#agentskill" class="btn btn-grad"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:2px; vertical-align:-2px;"><path d="M6 8v3a6 6 0 0 0 12 0V8M12 11v8M9 4v4M15 4v4"/></svg> Install AgentSkill</a>
-    <a href="#marketplace" class="btn btn-outline"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:2px; vertical-align:-2px;"><path d="M12 3l9 5-9 5-9-5 9-5H12zM3 16l9 5 9-5M3 11l9 5 9-5"/></svg> Browse Marketplace</a>
+    <a href="#install" class="btn btn-grad btn-lg" style="border-radius:50px">Install the Skill &rarr;</a>
+    <a href="#features" class="btn btn-outline btn-lg" style="border-radius:50px">See How It Works &darr;</a>
   </div>
-
-  <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-value" id="stat-datasets">6,700</div>
-      <div class="stat-label">Datasets</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" id="stat-agents">6,200</div>
-      <div class="stat-label">Agents</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" id="stat-users">10,300</div>
-      <div class="stat-label">Users</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value">$INAI</div>
-      <div class="stat-label">Token</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value gradient-text-cyan">140K ⭐</div>
-      <div class="stat-label">OpenClaw Stars</div>
-    </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="val">30s</span><span class="lbl">Install</span></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><span class="val">AES-256</span><span class="lbl">Encrypted</span></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><span class="val">MIT</span><span class="lbl">Licensed</span></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><span class="val">100%</span><span class="lbl">Works Offline</span></div>
   </div>
 </section>
 
-<!-- ============================================================
-     QUERY-BEFORE-BROWSE DEMO
-============================================================ -->
-<section id="demo">
-  <div class="container">
-    <div class="demo-header">
-      <div class="section-tag">Live Demo</div>
-      <h2 class="section-title">Query-Before-Browse™</h2>
-      <p class="section-sub" style="margin:0 auto;">Watch the same query run with and without Inflectiv — the difference is night and day.</p>
-    </div>
-
-    <div class="demo-center">
-      <div class="query-display">
-        <span class="icon">🔍</span>
-        <span>"Research top AI agent frameworks 2026 with pricing"</span>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0.75rem;align-items:start;margin-bottom:1.5rem;">
-      <!-- LEFT: Without Inflectiv -->
-      <div class="demo-panel panel-bad" id="panelBad">
-        <div class="demo-panel-header">
-          <div class="panel-title">❌ Without Inflectiv</div>
-          <div class="timer-badge timer-bad" id="timerBad">00:00</div>
-        </div>
-        <div class="demo-body" id="bodyBad">
-          <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.75rem;font-weight:600;">🌐 OPENING BROWSER TABS…</div>
-          <div class="browser-tabs" id="browserTabs">
-            <div class="browser-tab" id="tab0"><div class="spinner"></div> github.com</div>
-            <div class="browser-tab" id="tab1"><div class="spinner"></div> reddit.com/r/AI</div>
-            <div class="browser-tab" id="tab2"><div class="spinner"></div> medium.com</div>
-            <div class="browser-tab" id="tab3"><div class="spinner"></div> ycombinator.com</div>
-            <div class="browser-tab" id="tab4"><div class="spinner"></div> arxiv.org</div>
-            <div class="browser-tab" id="tab5"><div class="spinner"></div> techcrunch.com</div>
-            <div class="browser-tab" id="tab6"><div class="spinner"></div> dev.to</div>
-            <div class="browser-tab" id="tab7"><div class="spinner"></div> towardsdatascience</div>
-          </div>
-          <div class="loading-bar-wrap"><div class="loading-bar loading-bar-bad" id="loadBarBad"></div></div>
-          <div style="font-size:0.7rem;color:var(--text3);margin:0.5rem 0 0.75rem;">Parsing messy HTML… extracting data… retrying…</div>
-          <div class="html-output" id="htmlOutput" style="opacity:0;transition:opacity 0.5s;">
-<span class="tag">&lt;div</span> <span class="attr">class=</span><span class="val">"main-content"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;h1&gt;</span>Top AI Agent Frameworks...<span class="tag">&lt;/h1&gt;</span>
-  <span class="tag">&lt;p&gt;</span>Advertisement: Click here...<span class="tag">&lt;/p&gt;</span>
-  <span class="tag">&lt;div</span> <span class="attr">id=</span><span class="val">"cookie-banner"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
-  <span class="tag">&lt;script&gt;</span>/* 2400 lines */<span class="tag">&lt;/script&gt;</span>
-  <span class="tag">&lt;p&gt;</span><span class="attr">// Pricing:</span> <span class="val">Contact Sales</span><span class="tag">&lt;/p&gt;</span>
-  <span class="tag">&lt;div</span> <span class="attr">class=</span><span class="val">"paywall"</span><span class="tag">&gt;</span>Subscribe...<span class="tag">&lt;/div&gt;</span>
-          </div>
-          <div class="demo-overlay" id="overlayBad">▶ Press Run Demo to start</div>
-        </div>
-      </div>
-
-      <!-- VS DIVIDER -->
-      <div class="versus-divider" style="padding-top:3rem;">
-        <div class="versus-circle">VS</div>
-      </div>
-
-      <!-- RIGHT: With Inflectiv -->
-      <div class="demo-panel panel-good" id="panelGood">
-        <div class="demo-panel-header">
-          <div class="panel-title">✅ With Inflectiv</div>
-          <div class="timer-badge timer-good" id="timerGood">00:00</div>
-        </div>
-        <div class="demo-body" id="bodyGood">
-          <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.75rem;font-weight:600;">⚡ INFLECTIV API CALL</div>
-          <div class="api-call">
-            <span class="method">POST</span> <span class="endpoint">api.inflectiv.ai/v1/query</span><br>
-            <span class="key">Authorization:</span> <span class="string">Bearer $INAI_KEY</span><br><br>
-            <span class="key">"query":</span> <span class="string">"AI agent frameworks 2026"</span><br>
-            <span class="key">"dataset":</span> <span class="string">"tech/ai-frameworks"</span><br>
-            <span class="key">"format":</span> <span class="string">"structured"</span>
-          </div>
-          <div class="loading-bar-wrap"><div class="loading-bar loading-bar-good" id="loadBarGood"></div></div>
-          <div style="font-size:0.7rem;color:var(--success);margin:0.5rem 0 0.75rem;">✓ Cache hit · Verified · Structured</div>
-          <div class="json-response" id="jsonResponse">
-<span class="key">"frameworks"</span>: [
-  {
-    <span class="key">"name"</span>: <span class="str">"OpenClaw"</span>,
-    <span class="key">"stars"</span>: <span class="num">140000</span>,
-    <span class="key">"pricing"</span>: <span class="str">"MIT Open Source"</span>,
-    <span class="key">"backed_by"</span>: <span class="str">"OpenAI Foundation"</span>,
-    <span class="key">"agent_ready"</span>: <span class="bool">true</span>
-  },
-  {
-    <span class="key">"name"</span>: <span class="str">"LangGraph"</span>,
-    <span class="key">"stars"</span>: <span class="num">48200</span>,
-    <span class="key">"pricing"</span>: <span class="str">"$39/mo"</span>,
-    <span class="key">"agent_ready"</span>: <span class="bool">true</span>
-  },
-  {
-    <span class="key">"name"</span>: <span class="str">"CrewAI"</span>,
-    <span class="key">"stars"</span>: <span class="num">31000</span>,
-    <span class="key">"pricing"</span>: <span class="str">"Free / $29/mo"</span>,
-    <span class="key">"agent_ready"</span>: <span class="bool">true</span>
-  }
-],
-<span class="key">"meta"</span>: {
-  <span class="key">"cached"</span>: <span class="bool">true</span>,
-  <span class="key">"freshness"</span>: <span class="str">"2h ago"</span>,
-  <span class="key">"cost_inai"</span>: <span class="num">0.001</span>,
-  <span class="key">"response_ms"</span>: <span class="num">1840</span>
-}
-          </div>
-          <div class="demo-overlay" id="overlayGood">▶ Press Run Demo to start</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Result summary (hidden until demo runs) -->
-    <div id="demoResult" style="display:none;margin-bottom:1.5rem;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:1rem 1.25rem;text-align:center;">
-          <div style="font-size:1.8rem;font-weight:900;color:#f87171;">45s</div>
-          <div style="font-size:0.8rem;color:var(--text3);margin-top:0.25rem;">Without Inflectiv · 8 URLs · Messy HTML</div>
-        </div>
-        <div style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:1rem 1.25rem;text-align:center;">
-          <div style="font-size:1.8rem;font-weight:900;color:#34d399;">1.8s</div>
-          <div style="font-size:0.8rem;color:var(--text3);margin-top:0.25rem;">With Inflectiv · 1 API call · Clean JSON</div>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:0.75rem;font-size:0.85rem;color:var(--text2);">🚀 <strong style="color:var(--success);">25× faster</strong> · <strong style="color:#fbbf24;">99% cheaper</strong> · <strong style="color:var(--cyan);">100% structured</strong></div>
-    </div>
-
-    <div style="text-align:center;">
-      <button class="btn btn-grad" id="runDemoBtn" onclick="runDemo()" style="padding:0.75rem 2rem;font-size:1rem;">▶ Run Demo</button>
-    </div>
+<!-- ─── WHAT YOU GET ─────────────────── -->
+<section id="features" class="section section-bg2">
+  <div class="container section-center reveal">
+    <span class="section-tag">What You Get</span>
+    <h2 class="section-title">Everything your agent forgets, stored and encrypted.</h2>
+    <p class="section-sub">A local server that gives any AI agent persistent memory, encrypted secrets, and shared knowledge — regardless of framework.</p>
   </div>
-</section>
-
-<!-- ============================================================
-     AGENT DASHBOARD
-============================================================ -->
-<section id="dashboard">
   <div class="container">
-    <div style="margin-bottom:2.5rem;">
-      <div class="section-tag">Agent Dashboard</div>
-      <h2 class="section-title">Real-Time Intelligence Hub</h2>
-      <p class="section-sub">Monitor your OpenClaw agents, track $INAI usage, and watch the cache hit rate climb.</p>
-    </div>
-
-    <div class="dash-layout">
-      <!-- Sidebar -->
-      <div class="dash-sidebar">
-        <div class="sidebar-title">My Agents</div>
-        <div class="agent-item active" onclick="selectAgent(this)">
-          <div class="agent-avatar" style="background:linear-gradient(135deg,#7c3aed,#2563eb);">🔬</div>
-          <div>
-            <div class="agent-name">ResearchBot</div>
-            <div class="agent-status live">● Live</div>
-          </div>
+    <div class="feature-grid">
+      <div class="card reveal">
+        <div class="card-icon card-icon-orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         </div>
-        <div class="agent-item" onclick="selectAgent(this)">
-          <div class="agent-avatar" style="background:linear-gradient(135deg,#059669,#10b981);">📈</div>
-          <div>
-            <div class="agent-name">FinanceBot</div>
-            <div class="agent-status live">● Live</div>
-          </div>
-        </div>
-        <div class="agent-item" onclick="selectAgent(this)">
-          <div class="agent-avatar" style="background:linear-gradient(135deg,#d97706,#f59e0b);">🛒</div>
-          <div>
-            <div class="agent-name">ShoppingBot</div>
-            <div class="agent-status">○ Idle</div>
-          </div>
-        </div>
-        <div class="agent-item" onclick="selectAgent(this)">
-          <div class="agent-avatar" style="background:linear-gradient(135deg,#dc2626,#ef4444);">📰</div>
-          <div>
-            <div class="agent-name">NewsBot</div>
-            <div class="agent-status live">● Live</div>
-          </div>
-        </div>
-        <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--card-border);">
-          <button class="btn btn-grad" style="width:100%;justify-content:center;" onclick="showConnectModal()">+ Deploy Agent</button>
-        </div>
+        <h3>Persistent Memory</h3>
+        <p>Your agent remembers. MEMORY.md for long-term knowledge. SOUL.md for identity and principles. Daily logs for session history. All Markdown — human-readable, git-friendly, loaded automatically at every session start.</p>
+        <p class="use-case">Your research agent remembers yesterday's DeFi governance findings. Your coding agent retains your project preferences across sessions. Memory survives restarts, updates, and migrations.</p>
+        <div class="stat-line">One API call loads full session context</div>
       </div>
-
-      <!-- Main area -->
-      <div class="dash-main">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-card-label">Queries Today</div>
-            <div class="stat-card-value gradient-text" id="dashQueries">847</div>
-            <div class="stat-card-change">↑ 12% vs yesterday</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-label">Time Saved</div>
-            <div class="stat-card-value gradient-text-cyan" id="dashTime">14.2h</div>
-            <div class="stat-card-change">↑ 94% cache hit rate</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-label">$INAI Earned</div>
-            <div class="stat-card-value" style="color:#fbbf24;" id="dashInai">12.4</div>
-            <div class="stat-card-change">↑ From 3 datasets</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-label">Cache Hit Rate</div>
-            <div class="stat-card-value" style="color:var(--success);" id="dashHitRate">94%</div>
-            <div class="stat-card-change">↑ 2% this week</div>
-          </div>
+      <div class="card reveal">
+        <div class="card-icon card-icon-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         </div>
-
-        <div class="query-feed-card">
-          <div class="feed-header">
-            <div class="feed-title">
-              <div class="live-dot"></div>
-              Live Query Feed
-            </div>
-            <div class="feed-count" id="feedCount">Showing latest queries</div>
-          </div>
-          <div style="overflow-x:auto;">
-            <table class="query-table">
-              <thead>
-                <tr>
-                  <th>Query</th>
-                  <th>Dataset</th>
-                  <th>Agent</th>
-                  <th>Time</th>
-                  <th>$INAI</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="queryFeedBody">
-              </tbody>
-            </table>
-          </div>
+        <h3>Encrypted Secrets</h3>
+        <p>Your agent's credentials are safe. API keys, exchange tokens, wallet access — encrypted with AES-256 at rest. Decrypted only when your agent needs them. Never loaded into LLM context. Never exported. Never logged.</p>
+        <p class="use-case">Your trading agent stores exchange API keys. Your DevOps agent holds deployment credentials. You create subscriber tokens for read-only agents that can query but never modify.</p>
+        <div class="stat-line">Zero credentials in plaintext, ever</div>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon card-icon-cyan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
+        <h3>Shared Memory Between Agents</h3>
+        <p>Your agents share a brain. One vault, multiple agents. Owner tokens for full access, subscriber tokens for read-only. A research agent writes findings; a reporting agent reads them. Personal memory stays private. Team knowledge flows freely.</p>
+        <p class="use-case">Sales agent, support agent, research agent — all reading from the same vault. Shared context without shared risk. Role-based access built in.</p>
+        <div class="stat-line">Owner + subscriber roles with rate limiting</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     MARKETPLACE
-============================================================ -->
-<section id="marketplace">
+<!-- ─── HOW IT WORKS ─────────────────── -->
+<section id="install" class="section section-bg">
+  <div class="container reveal">
+    <span class="section-tag">Get Started</span>
+    <h2 class="section-title">Two commands. Your agent remembers everything.</h2>
+    <p class="section-sub">Docker or pip. Runs locally. Nothing leaves without your approval.</p>
+  </div>
   <div class="container">
-    <div class="market-header">
+    <div class="install-layout">
       <div>
-        <div class="section-tag">Marketplace</div>
-        <h2 class="section-title">Agent-Ready Datasets</h2>
-        <p class="section-sub">Verified, structured, and ready to query. No web scraping required.</p>
-      </div>
-      <div class="market-filters">
-        <button class="filter-btn active" onclick="filterDatasets('all', this)">All</button>
-        <button class="filter-btn" onclick="filterDatasets('finance', this)">Finance</button>
-        <button class="filter-btn" onclick="filterDatasets('research', this)">Research</button>
-        <button class="filter-btn" onclick="filterDatasets('legal', this)">Legal</button>
-        <button class="filter-btn" onclick="filterDatasets('news', this)">News</button>
-      </div>
-    </div>
-
-    <div class="dataset-grid" id="datasetGrid">
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     AGENTSKILL SETUP
-============================================================ -->
-<section id="agentskill">
-  <div class="container">
-    <div class="skill-layout">
-      <div>
-        <div class="section-tag">AgentSkill</div>
-        <h2 class="section-title">Three Steps to Intelligence</h2>
-        <p class="section-sub" style="margin-bottom:2rem;">Drop-in intelligence for every OpenClaw agent. Works with any model, any task.</p>
-        <div class="skill-steps">
-          <div class="skill-step">
+        <div class="install-steps reveal">
+          <div class="install-step">
             <div class="step-num">1</div>
             <div class="step-content">
-              <div class="step-title">Install the AgentSkill</div>
-              <div class="step-desc">One command adds Inflectiv as a portable skill to your OpenClaw setup.</div>
+              <h4>Install the skill</h4>
+              <p><code>openclaw skill install inflectiv-data-node</code> or Docker. First start prints your owner token.</p>
             </div>
           </div>
-          <div class="skill-step">
+          <div class="install-step">
             <div class="step-num">2</div>
             <div class="step-content">
-              <div class="step-title">Configure your $INAI key</div>
-              <div class="step-desc">Set your API key and choose which datasets your agents can access.</div>
+              <h4>Connect your agent</h4>
+              <p>Set vault URL and token. Python SDK or REST API.</p>
             </div>
           </div>
-          <div class="skill-step">
+          <div class="install-step">
             <div class="step-num">3</div>
             <div class="step-content">
-              <div class="step-title">Query from any agent</div>
-              <div class="step-desc">Your agents automatically query Inflectiv before browsing the web.</div>
+              <h4>Remember, store, share</h4>
+              <p>Persistent memory, encrypted credentials, multi-agent access control.</p>
             </div>
           </div>
         </div>
-        <div style="margin-top:2rem;display:flex;gap:0.75rem;">
-          <a href="#" class="btn btn-grad">📄 Full Docs</a>
-          <a href="#" class="btn btn-outline">⭐ GitHub</a>
+        <div class="framework-logos reveal">
+          <span class="fw-logo primary">OpenClaw</span>
+          <span class="fw-logo">LangChain</span>
+          <span class="fw-logo">CrewAI</span>
+          <span class="fw-logo">LlamaIndex</span>
+          <span class="fw-logo">AutoGPT</span>
+          <span class="fw-logo">Any Framework</span>
         </div>
       </div>
-
-      <div class="code-block-wrapper">
-        <div class="code-tabs" role="tablist">
-          <button class="code-tab active" onclick="switchTab('shell', this)">Shell</button>
-          <button class="code-tab" onclick="switchTab('python', this)">Python</button>
-          <button class="code-tab" onclick="switchTab('js', this)">JavaScript</button>
+      <div class="code-block reveal">
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab(this, 'tab-openclaw')">OpenClaw</button>
+          <button class="code-tab" onclick="switchTab(this, 'tab-shell')">Shell</button>
+          <button class="code-tab" onclick="switchTab(this, 'tab-python')">Python</button>
+          <button class="code-tab" onclick="switchTab(this, 'tab-curl')">curl</button>
         </div>
-        <div class="code-content">
-          <button class="copy-btn" onclick="copyCode()">Copy</button>
+        <div id="tab-openclaw" class="code-panel active">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><span class="cm"># Install as OpenClaw skill (recommended)</span>
+<span class="var">openclaw</span> skill install inflectiv-data-node
 
-          <div class="code-pane active" id="pane-shell">
-<pre><span class="cm"># Step 1: Install Inflectiv AgentSkill</span>
-<span class="fn">openclaw</span> <span class="str">skill install</span> <span class="var">inflectiv</span>
+<span class="cm"># Or add to your agent's skill manifest</span>
+<span class="cm"># skills/agent-vault/SKILL.md</span>
 
-<span class="cm"># Step 2: Authenticate with $INAI token</span>
-<span class="fn">openclaw</span> <span class="str">skill configure</span> <span class="var">inflectiv</span> \
-  --key <span class="str">"inai_live_xxxxxxxxxxxxxxxx"</span> \
-  --mode <span class="str">"query-before-browse"</span>
+<span class="cm"># The skill auto-starts the vault on port 8766</span>
+<span class="cm"># and configures your agent's memory layer.</span></pre>
+        </div>
+        <div id="tab-shell" class="code-panel">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><span class="cm"># Start the Vault (pick one)</span>
+<span class="var">pip</span> install -r vault/requirements.standalone.txt
+<span class="var">VAULT_ROOT</span><span class="op">=</span>/tmp/vault <span class="op">\</span>
+<span class="var">VAULT_MASTER_PASSWORD</span><span class="op">=</span>your-secret-key <span class="op">\</span>
+<span class="var">VAULT_ENV</span><span class="op">=</span>development <span class="op">\</span>
+<span class="var">python</span> vault/vault_server.py
 
-<span class="cm"># Step 3: Verify installation</span>
-<span class="fn">openclaw</span> <span class="str">skill test</span> <span class="var">inflectiv</span>
-<span class="cm"># ✓ Inflectiv v2.4.1 connected</span>
-<span class="cm"># ✓ 6,700 datasets available</span>
-<span class="cm"># ✓ Response time: 120ms</span></pre>
-          </div>
+<span class="cm"># Or with Docker</span>
+<span class="var">docker</span> compose -f docker-compose.vault.yml up -d
 
-          <div class="code-pane" id="pane-python">
-<pre><span class="kw">from</span> <span class="var">openclaw.skills</span> <span class="kw">import</span> <span class="cls">Inflectiv</span>
+<span class="cm"># Port 8766. First start prints your owner token.</span>
+<span class="cm"># Save it — you'll need it to connect.</span></pre>
+        </div>
+        <div id="tab-python" class="code-panel">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><span class="kw">from</span> <span class="cls">vault.vault_client</span> <span class="kw">import</span> <span class="cls">VaultClient</span>
 
-<span class="cm"># Initialize with your $INAI key</span>
-<span class="var">inflectiv</span> <span class="op">=</span> <span class="cls">Inflectiv</span>(
-    api_key<span class="op">=</span><span class="str">"inai_live_xxxxxxxxxxxxxxxx"</span>,
-    mode<span class="op">=</span><span class="str">"query-before-browse"</span>
+<span class="cm"># Connect to local vault</span>
+<span class="var">vc</span> <span class="op">=</span> <span class="cls">VaultClient</span>(
+    <span class="prop">base_url</span><span class="op">=</span><span class="str">"http://localhost:8766"</span>,
+    <span class="prop">token</span><span class="op">=</span><span class="str">"&lt;owner_token&gt;"</span>
 )
 
-<span class="cm"># Query a structured dataset</span>
-<span class="var">result</span> <span class="op">=</span> <span class="kw">await</span> <span class="var">inflectiv</span>.<span class="fn">query</span>(
-    query<span class="op">=</span><span class="str">"Top AI agent frameworks 2026"</span>,
-    dataset<span class="op">=</span><span class="str">"tech/ai-frameworks"</span>,
-    format<span class="op">=</span><span class="str">"structured"</span>
-)
+<span class="cm"># Load session context (MEMORY.md + SOUL.md)</span>
+<span class="var">ctx</span> <span class="op">=</span> <span class="var">vc</span>.<span class="fn">context</span>()
 
-<span class="cm"># Access clean, structured data</span>
-<span class="kw">for</span> <span class="var">framework</span> <span class="kw">in</span> <span class="var">result</span>[<span class="str">"frameworks"</span>]:
-    <span class="fn">print</span>(<span class="var">framework</span>[<span class="str">"name"</span>], <span class="var">framework</span>[<span class="str">"pricing"</span>])
+<span class="cm"># Query across all vaults</span>
+<span class="var">results</span> <span class="op">=</span> <span class="var">vc</span>.<span class="fn">query</span>(<span class="str">"deployment notes"</span>)
 
-<span class="cm"># Result: {'cached': True, 'cost_inai': 0.001, 'ms': 1840}</span></pre>
-          </div>
+<span class="cm"># Read/write memory</span>
+<span class="var">mem</span> <span class="op">=</span> <span class="var">vc</span>.<span class="fn">memory</span>(<span class="str">"MEMORY.md"</span>)
+<span class="var">vc</span>.<span class="fn">remember</span>(<span class="str">"MEMORY.md"</span>, <span class="str">"# Updated\n\n- new insight"</span>)
 
-          <div class="code-pane" id="pane-js">
-<pre><span class="kw">import</span> { <span class="cls">Inflectiv</span> } <span class="kw">from</span> <span class="str">'@openclaw/inflectiv-skill'</span>
+<span class="cm"># Encrypted secrets</span>
+<span class="var">vc</span>.<span class="fn">store_secret</span>(<span class="str">"openai"</span>, <span class="str">"sk-..."</span>)
+<span class="var">key</span> <span class="op">=</span> <span class="var">vc</span>.<span class="fn">secret</span>(<span class="str">"openai"</span>)
 
-<span class="cm">// Initialize Inflectiv skill</span>
-<span class="kw">const</span> <span class="var">inflectiv</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Inflectiv</span>({
-  apiKey: <span class="str">'inai_live_xxxxxxxxxxxxxxxx'</span>,
-  mode: <span class="str">'query-before-browse'</span>
-})
+<span class="cm"># AMPS export/import</span>
+<span class="var">doc</span> <span class="op">=</span> <span class="var">vc</span>.<span class="fn">export</span>()
+<span class="var">vc</span>.<span class="fn">import_amps</span>(<span class="var">amps_doc</span>)</pre>
+        </div>
+        <div id="tab-curl" class="code-panel">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><span class="cm"># Load session context</span>
+<span class="var">curl</span> http://localhost:8766/vault/memory/context <span class="op">\</span>
+  -H <span class="str">"X-Vault-Token: TOKEN"</span>
 
-<span class="cm">// Query with automatic cache + fallback</span>
-<span class="kw">const</span> <span class="var">result</span> <span class="op">=</span> <span class="kw">await</span> <span class="var">inflectiv</span>.<span class="fn">query</span>({
-  query: <span class="str">'Top AI agent frameworks 2026'</span>,
-  dataset: <span class="str">'tech/ai-frameworks'</span>,
-  fallback: <span class="str">'browse'</span> <span class="cm">// browse if cache miss</span>
-})
+<span class="cm"># Store encrypted secret</span>
+<span class="var">curl</span> -X POST http://localhost:8766/vault/secrets/openai <span class="op">\</span>
+  -H <span class="str">"X-Vault-Token: TOKEN"</span> <span class="op">\</span>
+  -H <span class="str">"Content-Type: application/json"</span> <span class="op">\</span>
+  -d <span class="str">'{ "value": "sk-..." }'</span>
 
-<span class="cm">// Clean structured response</span>
-<span class="var">result</span>.<span class="prop">frameworks</span>.<span class="fn">forEach</span>(<span class="var">fw</span> <span class="op">=></span>
-  <span class="var">console</span>.<span class="fn">log</span>(<span class="var">fw</span>.<span class="prop">name</span>, <span class="str">`$</span>{<span class="var">fw</span>.<span class="prop">pricing</span>}<span class="str">`</span>)
-)
+<span class="cm"># Query across all vaults</span>
+<span class="var">curl</span> -X POST http://localhost:8766/vault/query <span class="op">\</span>
+  -H <span class="str">"X-Vault-Token: TOKEN"</span> <span class="op">\</span>
+  -H <span class="str">"Content-Type: application/json"</span> <span class="op">\</span>
+  -d <span class="str">'{ "q": "deployment notes" }'</span>
 
-<span class="cm">// { cached: true, cost_inai: 0.001, ms: 1840 }</span></pre>
-          </div>
+<span class="cm"># Export as AMPS v1.0</span>
+<span class="var">curl</span> http://localhost:8766/vault/export <span class="op">\</span>
+  -H <span class="str">"X-Vault-Token: TOKEN"</span></pre>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     FLYWHEEL
-============================================================ -->
-<section id="flywheel">
+<!-- ─── USE CASES ────────────────────── -->
+<section id="usecases" class="section section-bg2">
+  <div class="container section-center reveal">
+    <span class="section-tag">Real Workflows</span>
+    <h2 class="section-title">See it in action.</h2>
+    <p class="section-sub">Real OpenClaw workflows where the vault changes everything.</p>
+  </div>
   <div class="container">
-    <div style="text-align:center;margin-bottom:4rem;">
-      <div class="section-tag" style="justify-content:center;"><span></span>The Flywheel</div>
-      <h2 class="section-title">Data Network Effects</h2>
-      <p class="section-sub" style="margin:0 auto;">Every interaction strengthens the network. The Inflectiv flywheel creates compounding intelligence.</p>
-    </div>
-
-    <div class="flywheel-container">
-      
-      <!-- Modern UI Diagram Wrapper -->
-      <div class="modern-flywheel-wrapper">
-        
-        <!-- Background Orbits -->
-        <svg class="mf-orbit-svg" viewBox="0 0 500 500">
-          <circle cx="250" cy="250" r="210" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2" stroke-dasharray="8 8"/>
-          <!-- Orbiting Particles -->
-          <circle cx="250" cy="40" r="4" fill="#a78bfa" style="filter: blur(1px);"/>
-          <circle cx="460" cy="250" r="4" fill="#34d399" style="filter: blur(1px);"/>
-          <circle cx="250" cy="460" r="4" fill="#fbbf24" style="filter: blur(1px);"/>
-          <circle cx="40" cy="250" r="4" fill="#E18A4F" style="filter: blur(1px);"/>
-        </svg>
-
-        <!-- Center Hub -->
-        <div class="mf-center">
-          <div class="mf-pulse"></div>
-          <div class="mf-pulse mf-pulse-2"></div>
-          <div class="mf-avatar-container">
-            <!-- Custom OpenClaw Character SVG -->
-            <svg viewBox="0 0 100 100" width="80" height="80" style="margin-top:5px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));">
-              <!-- Antennae -->
-              <path d="M 38 25 Q 32 18 20 22" stroke="#e84444" stroke-width="3" fill="none" stroke-linecap="round"/>
-              <path d="M 62 25 Q 68 18 80 22" stroke="#e84444" stroke-width="3" fill="none" stroke-linecap="round"/>
-              
-              <!-- Legs -->
-              <rect x="40" y="75" width="8" height="15" rx="2" fill="#d03030"/>
-              <rect x="52" y="75" width="8" height="15" rx="2" fill="#d03030"/>
-              
-              <!-- Body -->
-              <circle cx="50" cy="50" r="32" fill="#e84444"/>
-              
-              <!-- Shading for 3D sphere feel -->
-              <circle cx="45" cy="45" r="28" fill="url(#bodyGlow)" opacity="0.4"/>
-              
-              <!-- Arms -->
-              <ellipse cx="20" cy="50" rx="9" ry="12" fill="#e84444" transform="rotate(20 20 50)"/>
-              <ellipse cx="80" cy="50" rx="9" ry="12" fill="#e84444" transform="rotate(-20 80 50)"/>
-              
-              <!-- Eyes Background (Dark sockets) -->
-              <circle cx="38" cy="45" r="5.5" fill="#111827"/>
-              <circle cx="62" cy="45" r="5.5" fill="#111827"/>
-              
-              <!-- Eyes Glowing Cyan -->
-              <circle cx="38" cy="45" r="2" fill="#0ee8d0" style="filter: drop-shadow(0 0 3px #0ee8d0);"/>
-              <circle cx="62" cy="45" r="2" fill="#0ee8d0" style="filter: drop-shadow(0 0 3px #0ee8d0);"/>
-              
-              <defs>
-                <radialGradient id="bodyGlow" cx="30%" cy="30%" r="70%">
-                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
-                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Nodes -->
-        <div class="mf-node node-top">
-          <div class="mf-icon" style="background: rgba(167,139,250,0.2); border: 1px solid rgba(167,139,250,0.4); color: #a78bfa;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 10c0-3 14-3 14 0c0 3-5 5-7 8c-2-3-7-5-7-8z"/><path d="M9 22v-7m6 7v-7"/><circle cx="12" cy="11" r="2" fill="currentColor"/></svg>
-          </div>
-          <div>
-            <div class="mf-text">Agents Query</div>
-            <div class="mf-sub">Instant Access</div>
-          </div>
-        </div>
-
-        <div class="mf-node node-right">
-          <div class="mf-icon" style="background: rgba(52,211,153,0.2); border: 1px solid rgba(52,211,153,0.4); color: #34d399;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          </div>
-          <div>
-            <div class="mf-text">94% Hit Rate</div>
-            <div class="mf-sub">Verified Data</div>
-          </div>
-        </div>
-
-        <div class="mf-node node-bottom">
-          <div class="mf-icon" style="background: rgba(251,191,36,0.2); border: 1px solid rgba(251,191,36,0.4); color: #fbbf24;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V3m-5 5l5-5 5 5m-13 7v6h16v-6"/></svg>
-          </div>
-          <div>
-            <div class="mf-text">Publish Back</div>
-            <div class="mf-sub">Auto Contrib</div>
-          </div>
-        </div>
-
-        <div class="mf-node node-left">
-          <div class="mf-icon" style="background: rgba(225,138,79,0.2); border: 1px solid rgba(225,138,79,0.4); color: #E18A4F;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8m-4-4v8"/></svg>
-          </div>
-          <div>
-            <div class="mf-text">Earn $INAI</div>
-            <div class="mf-sub">Token Rewards</div>
-          </div>
-        </div>
-
+    <div class="usecase-grid">
+      <div class="usecase-card reveal">
+        <div class="usecase-num">1</div>
+        <h3>The Research Agent That Learns</h3>
+        <p>Monday: Your agent researches Aave V4 governance. Stores findings in MEMORY.md. Tuesday: Agent loads yesterday's context automatically. Skips redundant research. Goes deeper — cross-protocol risk analysis. New insights, not repeated work.</p>
+        <div class="usecase-result">Deeper analysis. Lower cost. Compounding knowledge.</div>
       </div>
-
-      <!-- Text Instructions -->
-      <div class="flywheel-info" style="padding-top:1rem;">
-        <ul class="flywheel-list">
-          <li>
-            <div class="fl-icon" style="color: #a78bfa;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 10c0-3 14-3 14 0c0 3-5 5-7 8c-2-3-7-5-7-8z"/><path d="M9 22v-7m6 7v-7"/><circle cx="12" cy="11" r="2" fill="currentColor"/></svg>
-            </div>
-            <div>
-              <div class="fl-title">Agents Query</div>
-              <div class="fl-desc">OpenClaw agents send queries to Inflectiv before browsing the web.</div>
-            </div>
-          </li>
-          <li>
-            <div class="fl-icon" style="color: #34d399;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-            <div>
-              <div class="fl-title">94% Hit Rate</div>
-              <div class="fl-desc">Most queries return instant structured data. Agents save time, cost $INAI.</div>
-            </div>
-          </li>
-          <li>
-            <div class="fl-icon" style="color: #fbbf24;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V3m-5 5l5-5 5 5m-13 7v6h16v-6"/></svg>
-            </div>
-            <div>
-              <div class="fl-title">Publish Back</div>
-              <div class="fl-desc">Cache misses trigger web browsing + automatic publication back to the marketplace.</div>
-            </div>
-          </li>
-          <li>
-            <div class="fl-icon" style="color: #E18A4F;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8m-4-4v8"/></svg>
-            </div>
-            <div>
-              <div class="fl-title">Earn $INAI</div>
-              <div class="fl-desc">Dataset contributors earn tokens every time their data serves a query.</div>
-            </div>
-          </li>
-        </ul>
+      <div class="usecase-card reveal">
+        <div class="usecase-num">2</div>
+        <h3>The Multi-Agent Team</h3>
+        <p>You run 3 OpenClaw agents: researcher, analyst, reporter. The researcher writes to the vault. The analyst queries it. The reporter reads the latest findings. Each has its own token. The vault handles access control.</p>
+        <div class="usecase-result">Shared intelligence. Private boundaries. No manual coordination.</div>
       </div>
-
+      <div class="usecase-card reveal">
+        <div class="usecase-num">3</div>
+        <h3>The Agent That Migrates</h3>
+        <p>You built an agent in CrewAI. You want to move to OpenClaw. Export memory as AMPS (one command). Import into your new vault. Your agent keeps its identity, knowledge, and preferences. Zero cold-start.</p>
+        <div class="usecase-result">Framework freedom. No lock-in. Agent identity travels.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     FOOTER
-============================================================ -->
+<!-- ─── TECHNICAL DETAILS ────────────── -->
+<section id="technical" class="section section-bg3">
+  <div class="container reveal">
+    <span class="section-tag">Technical Details</span>
+    <h2 class="section-title">What's under the hood.</h2>
+    <p class="section-sub">For developers who want specifics.</p>
+  </div>
+  <div class="container">
+    <div class="tech-grid">
+      <div class="tech-item reveal">
+        <strong>API</strong>
+        <p>FastAPI on port 8766. Full REST API with OpenAPI docs.</p>
+      </div>
+      <div class="tech-item reveal">
+        <strong>Auth</strong>
+        <p>Token-based. Owner (read/write) and subscriber (read-only) roles. Rate limiting built in.</p>
+      </div>
+      <div class="tech-item reveal">
+        <strong>Storage</strong>
+        <p>Markdown files, encrypted at rest with Fernet/AES-256. Human-readable when decrypted.</p>
+      </div>
+      <div class="tech-item reveal">
+        <strong>Context Loading</strong>
+        <p><code style="font-family:var(--mono);font-size:0.82rem;background:rgba(225,138,79,0.1);padding:0.1rem 0.4rem;border-radius:3px;color:var(--brand-orange)">GET /vault/memory/context</code> returns MEMORY.md + SOUL.md + task_plan.md + today/yesterday logs in one call.</p>
+      </div>
+      <div class="tech-item reveal">
+        <strong>Query</strong>
+        <p><code style="font-family:var(--mono);font-size:0.82rem;background:rgba(225,138,79,0.1);padding:0.1rem 0.4rem;border-radius:3px;color:var(--brand-orange)">POST /vault/query</code> searches personal vault + knowledge vaults. Deduplicates results. Surfaces conflicts via <code style="font-family:var(--mono);font-size:0.82rem;color:var(--brand-orange)">also_found</code>.</p>
+      </div>
+      <div class="tech-item reveal">
+        <strong>AMPS</strong>
+        <p>Export/import your agent's entire memory as portable JSON. <a href="amps.html">Read the standard &rarr;</a></p>
+      </div>
+      <div class="tech-item reveal">
+        <strong>Contribution Pipeline</strong>
+        <p>PII auto-sanitization (emails, wallets, API keys redacted). Stage &rarr; review &rarr; approve workflow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ECOSYSTEM ────────────────────── -->
+<section id="ecosystem" class="section section-bg2">
+  <div class="container section-center reveal">
+    <span class="section-tag">Ecosystem</span>
+    <h2 class="section-title">Works with the tools you already use.</h2>
+    <p class="section-sub">Native SKILL.md integration for OpenClaw. REST API for everything else.</p>
+  </div>
+  <div class="container">
+    <div class="eco-grid">
+      <div class="eco-card featured reveal">
+        <span class="eco-badge">Recommended</span>
+        <h3>OpenClaw Registry</h3>
+        <p>SKILL.md standard for ClawHub. Install from the skill ecosystem with one command. Compatible with Claude Code, Cursor, and Copilot.</p>
+        <span class="eco-cmd">openclaw skill install inflectiv-data-node</span>
+      </div>
+      <div class="eco-card reveal">
+        <h3>A2A Protocol</h3>
+        <p>FastA2A v0.2 JSON-RPC endpoint for multi-agent swarms. Standard agent-to-agent messaging.</p>
+        <span class="eco-cmd">POST /a2a &rarr; JSON-RPC 2.0</span>
+      </div>
+      <div class="eco-card reveal">
+        <h3>REST API + Python SDK</h3>
+        <p>FastAPI server with full REST API. Python SDK via vault_client.py. Works with any language that speaks HTTP.</p>
+        <span class="eco-cmd">http://localhost:8766/vault/*</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER CTA ───────────────────── -->
+<section class="footer-cta">
+  <h2>Your agents deserve memory that lasts.</h2>
+  <div class="install-cmd" onclick="copyInstall(this)">
+    <code>$ openclaw skill install inflectiv-data-node</code>
+    <svg class="copy-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+  </div>
+  <div class="install-alt">or <code>pip install -r vault/requirements.standalone.txt</code></div>
+  <div class="footer-cta-links">
+    <a href="vinn.html">Want network intelligence? See what's next &rarr;</a>
+    <a href="amps.html">Read the AMPS portability standard &rarr;</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ───────────────────────── -->
 <footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="logo">Inflectiv × OpenClaw</div>
-        <p>The default intelligence layer for the OpenClaw agent ecosystem. Structured data, instant access, powered by $INAI.</p>
-        <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
-          <span class="token-chip">⬡ $INAI</span>
-          <span class="powered-badge"><span class="walrus">Walrus</span> Storage</span>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4>Product</h4>
-        <a href="#">Marketplace</a>
-        <a href="#">AgentSkill</a>
-        <a href="#">Dashboard</a>
-        <a href="#">API Reference</a>
-        <a href="#">Pricing</a>
-      </div>
-      <div class="footer-col">
-        <h4>Developers</h4>
-        <a href="#">Documentation</a>
-        <a href="#">GitHub</a>
-        <a href="#">Discord</a>
-        <a href="#">Changelog</a>
-        <a href="#">Status</a>
-      </div>
-      <div class="footer-col">
-        <h4>Token</h4>
-        <a href="#">$INAI Tokenomics</a>
-        <a href="#">Staking</a>
-        <a href="#">Governance</a>
-        <a href="#">Walrus Integration</a>
-        <a href="#">Whitepaper</a>
-      </div>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h4>Inflectiv &times; OpenClaw</h4>
+      <p>Persistent memory, encrypted secrets, and shared knowledge for AI agents. Open source. MIT licensed. Built for the OpenClaw ecosystem.</p>
     </div>
-    <div class="footer-bottom">
-      <div>© 2026 Inflectiv. Intelligence Economy.</div>
-      <div class="powered-badge">
-        Powered by <span class="inai">$INAI</span> &amp; <span class="walrus">Walrus</span>
-      </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <a href="index.html">Vault</a>
+      <a href="vinn.html">Network</a>
+      <a href="amps.html">AMPS Standard</a>
+      <a href="#">Pricing</a>
     </div>
+    <div class="footer-col">
+      <h5>Developers</h5>
+      <a href="#">Documentation</a>
+      <a href="#">API Reference</a>
+      <a href="#">GitHub</a>
+      <a href="#">SKILL.md Spec</a>
+    </div>
+    <div class="footer-col">
+      <h5>Community</h5>
+      <a href="#">Discord</a>
+      <a href="#">Twitter</a>
+      <a href="#">Blog</a>
+      <a href="#">ClawHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Inflectiv. MIT Licensed.</span>
+    <span>Built for the agentic future.</span>
   </div>
 </footer>
 
-<!-- ============================================================
-     CONNECT MODAL
-============================================================ -->
-<div id="connectModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
-  <div style="background:#ffffff;border:1px solid rgba(124,58,237,0.4);border-radius:20px;padding:2rem;max-width:440px;width:90%;box-shadow:0 0 80px rgba(124,58,237,0.25);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-      <div style="font-size:1.1rem;font-weight:800;">⚡ Connect OpenClaw</div>
-      <button onclick="closeModal()" style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer;">✕</button>
-    </div>
-    <div style="font-size:0.875rem;color:var(--text2);margin-bottom:1.5rem;">Enter your OpenClaw config to activate the Inflectiv intelligence layer.</div>
-    <div style="display:flex;flex-direction:column;gap:0.75rem;">
-      <input type="text" placeholder="OpenClaw Agent ID" style="width:100%;padding:0.75rem 1rem;border-radius:10px;border:1px solid rgba(0,0,0,0.08);background:rgba(0,0,0,0.03);color:var(--text);font-family:Inter,sans-serif;font-size:0.875rem;outline:none;" onfocus="this.style.borderColor='rgba(124,58,237,0.5)'" onblur="this.style.borderColor='rgba(0,0,0,0.08)'">
-      <input type="password" placeholder="$INAI API Key" style="width:100%;padding:0.75rem 1rem;border-radius:10px;border:1px solid rgba(0,0,0,0.08);background:rgba(0,0,0,0.03);color:var(--text);font-family:Inter,sans-serif;font-size:0.875rem;outline:none;" onfocus="this.style.borderColor='rgba(124,58,237,0.5)'" onblur="this.style.borderColor='rgba(0,0,0,0.08)'">
-      <button class="btn btn-grad" style="width:100%;justify-content:center;padding:0.75rem;font-size:0.9rem;" onclick="closeModal()">Connect & Activate</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
 <script>
-// ─── PARTICLE BACKGROUND ─────────────────────────────────────
-(function() {
-  const canvas = document.getElementById('particleCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-  function resize() {
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-  function Particle() {
-    this.x = Math.random() * W;
-    this.y = Math.random() * H;
-    this.vx = (Math.random() - 0.5) * 0.3;
-    this.vy = (Math.random() - 0.5) * 0.3;
-    this.r = Math.random() * 1.5 + 0.5;
-    this.alpha = Math.random() * 0.5 + 0.1;
-    this.color = Math.random() > 0.5 ? '#7c3aed' : '#06b6d4';
-  }
-  function init() {
-    resize();
-    particles = Array.from({length: 80}, () => new Particle());
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = p.alpha;
-      ctx.fill();
-    });
-    // Draw connections
-    ctx.globalAlpha = 1;
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const d = Math.sqrt(dx*dx + dy*dy);
-        if (d < 80) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(124,58,237,${0.06 * (1 - d/80)})`;
-          ctx.lineWidth = 0.5;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize', resize);
-  init();
-  draw();
-})();
-
-// ─── DEMO ─────────────────────────────────────────────────────
-let demoRunning = false;
-function runDemo() {
-  if (demoRunning) return;
-  demoRunning = true;
-  const btn = document.getElementById('runDemoBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Running...';
-  document.getElementById('overlayBad').style.display = 'none';
-  document.getElementById('overlayGood').style.display = 'none';
-  document.getElementById('demoResult').style.display = 'none';
-  document.getElementById('jsonResponse').classList.remove('visible');
-  document.getElementById('htmlOutput').style.opacity = '0';
-  document.querySelectorAll('.browser-tab').forEach(t => t.classList.remove('open'));
-  document.getElementById('loadBarBad').style.width = '0%';
-  document.getElementById('loadBarGood').style.width = '0%';
-  document.getElementById('timerBad').textContent = '00:00';
-  document.getElementById('timerGood').textContent = '00:00';
-
-  // BAD: open tabs one by one
-  const tabs = document.querySelectorAll('.browser-tab');
-  tabs.forEach((tab, i) => {
-    setTimeout(() => tab.classList.add('open'), i * 400 + 200);
-  });
-
-  // BAD: loading bar to 100% over 4s
-  let badPct = 0;
-  const badInterval = setInterval(() => {
-    badPct = Math.min(badPct + 0.5, 100);
-    document.getElementById('loadBarBad').style.width = badPct + '%';
-    if (badPct >= 100) clearInterval(badInterval);
-  }, 200);
-
-  // BAD: timer ticking up (fake 45s in 4s)
-  let badSec = 0;
-  const badTimer = setInterval(() => {
-    badSec++;
-    const faked = Math.round(badSec * 11.25);
-    document.getElementById('timerBad').textContent =
-      String(Math.floor(faked/60)).padStart(2,'0') + ':' +
-      String(faked%60).padStart(2,'0');
-    if (badSec >= 4) clearInterval(badTimer);
-  }, 1000);
-
-  // Show HTML output at 2.5s
-  setTimeout(() => {
-    document.getElementById('htmlOutput').style.opacity = '1';
-  }, 2500);
-
-  // GOOD: fast load bar to 100% in 0.3s
-  setTimeout(() => {
-    let goodPct = 0;
-    const goodInterval = setInterval(() => {
-      goodPct = Math.min(goodPct + 10, 100);
-      document.getElementById('loadBarGood').style.width = goodPct + '%';
-      if (goodPct >= 100) clearInterval(goodInterval);
-    }, 30);
-  }, 500);
-
-  // GOOD: timer ticking (real 1.84s)
-  let goodMs = 0;
-  const goodTimer = setInterval(() => {
-    goodMs += 60;
-    document.getElementById('timerGood').textContent =
-      '00:' + String(Math.floor(goodMs/1000)).padStart(2,'0');
-    if (goodMs >= 1840) {
-      clearInterval(goodTimer);
-      document.getElementById('timerGood').textContent = '00:02';
-    }
-  }, 60);
-
-  // GOOD: show JSON at 2s
-  setTimeout(() => {
-    document.getElementById('jsonResponse').classList.add('visible');
-  }, 2000);
-
-  // Show results at 5s
-  setTimeout(() => {
-    document.getElementById('demoResult').style.display = 'block';
-    document.getElementById('timerBad').textContent = '00:45';
-    btn.disabled = false;
-    btn.textContent = '↺ Run Again';
-    demoRunning = false;
-  }, 5000);
-}
-
-// ─── MODAL ────────────────────────────────────────────────────
-function showConnectModal() {
-  const m = document.getElementById('connectModal');
-  m.style.display = 'flex';
-}
-function closeModal() {
-  document.getElementById('connectModal').style.display = 'none';
-}
-document.getElementById('connectModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// ─── CODE TABS ───────────────────────────────────────────────
-function switchTab(lang, el) {
-  document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.code-pane').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('pane-' + lang).classList.add('active');
-}
-
-function copyCode() {
-  const activePane = document.querySelector('.code-pane.active pre');
-  if (!activePane) return;
-  const text = activePane.innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = '✓ Copied!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-// ─── AGENT SIDEBAR ───────────────────────────────────────────
-function selectAgent(el) {
-  document.querySelectorAll('.agent-item').forEach(a => a.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ─── LIVE QUERY FEED ─────────────────────────────────────────
-const FAKE_QUERIES = [
-  { q: 'Bitcoin price history 2025', ds: 'finance/crypto', agent: 'FinanceBot', t: '0.8s', cost: '0.001', hit: true },
-  { q: 'OpenAI GPT-5 benchmark scores', ds: 'tech/ai-models', agent: 'ResearchBot', t: '1.2s', cost: '0.002', hit: true },
-  { q: 'Top SaaS companies revenue Q4', ds: 'finance/saas', agent: 'FinanceBot', t: '2.1s', cost: '0.003', hit: true },
-  { q: 'EU AI Act compliance checklist', ds: 'legal/eu-ai', agent: 'ResearchBot', t: '0.9s', cost: '0.001', hit: true },
-  { q: 'iPhone 18 Pro Max specs', ds: 'products/apple', agent: 'ShoppingBot', t: '1.5s', cost: '0.002', hit: true },
-  { q: 'Nvidia H200 vs H100 comparison', ds: 'tech/hardware', agent: 'ResearchBot', t: '1.1s', cost: '0.001', hit: true },
-  { q: 'Venture funding AI startups 2026', ds: 'finance/vc', agent: 'FinanceBot', t: '0.7s', cost: '0.001', hit: true },
-  { q: 'Latest OpenClaw release notes', ds: '-', agent: 'ResearchBot', t: '8.2s', cost: '0.000', hit: false },
-  { q: 'Tesla Model 3 2026 pricing', ds: 'products/auto', agent: 'ShoppingBot', t: '1.3s', cost: '0.002', hit: true },
-  { q: 'DeepSeek R3 technical paper', ds: 'research/papers', agent: 'ResearchBot', t: '2.4s', cost: '0.003', hit: true },
-  { q: 'S&P 500 sector performance', ds: 'finance/stocks', agent: 'FinanceBot', t: '0.6s', cost: '0.001', hit: true },
-  { q: 'GDPR data retention rules', ds: 'legal/gdpr', agent: 'ResearchBot', t: '1.8s', cost: '0.002', hit: true },
-  { q: 'Breaking AI news this week', ds: 'news/tech-ai', agent: 'NewsBot', t: '0.4s', cost: '0.001', hit: true },
-  { q: 'Anthropic Claude 4 benchmarks', ds: 'tech/ai-models', agent: 'ResearchBot', t: '1.0s', cost: '0.002', hit: true },
-  { q: 'SUI blockchain TVL metrics', ds: 'crypto/defi', agent: 'FinanceBot', t: '0.9s', cost: '0.001', hit: true },
-];
-
-let queryCount = 0;
-let feedRows = [];
-
-function initFeed() {
-  const body = document.getElementById('queryFeedBody');
-  const initialRows = [
-    FAKE_QUERIES[0], FAKE_QUERIES[1], FAKE_QUERIES[2],
-    FAKE_QUERIES[3], FAKE_QUERIES[4]
-  ];
-  initialRows.forEach(row => addFeedRow(row, false));
-}
-
-function addFeedRow(data, animate) {
-  const body = document.getElementById('queryFeedBody');
-  const tr = document.createElement('tr');
-  if (animate) tr.classList.add('new-row');
-  const agentColors = {
-    'ResearchBot': '#a78bfa',
-    'FinanceBot': '#34d399',
-    'ShoppingBot': '#fbbf24',
-    'NewsBot': '#f87171'
-  };
-  const color = agentColors[data.agent] || '#94a3b8';
-  tr.innerHTML = `
-    <td><div class="query-text" title="${data.q}">${data.q}</div></td>
-    <td>${data.hit ? `<span class="dataset-badge">${data.ds}</span>` : '<span style="color:var(--text3);font-size:0.75rem;">—</span>'}</td>
-    <td><span style="font-size:0.78rem;font-weight:600;color:${color};">${data.agent}</span></td>
-    <td><span class="time-badge">${data.t}</span></td>
-    <td><span class="cost-badge">${data.cost}</span></td>
-    <td>${data.hit
-      ? '<span class="status-hit">● Hit</span>'
-      : '<span class="status-miss">◌ Miss</span>'}</td>
-  `;
-  // Keep max 8 rows
-  body.insertBefore(tr, body.firstChild);
-  const rows = body.querySelectorAll('tr');
-  if (rows.length > 8) body.removeChild(rows[rows.length - 1]);
-}
-
-function updateFeed() {
-  queryCount = (queryCount + 1) % FAKE_QUERIES.length;
-  addFeedRow(FAKE_QUERIES[queryCount], true);
-  // Update stats
-  const q = parseInt(document.getElementById('dashQueries').textContent.replace(/,/g,''));
-  document.getElementById('dashQueries').textContent = (q + Math.floor(Math.random()*3+1)).toLocaleString();
-  const inai = parseFloat(document.getElementById('dashInai').textContent);
-  document.getElementById('dashInai').textContent = (inai + 0.1).toFixed(1);
-}
-
-initFeed();
-setInterval(updateFeed, 3000);
-
-// ─── MARKETPLACE DATA ────────────────────────────────────────
-const DATASETS = [
-  { name: 'AI Model Benchmarks', cat: 'Research', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:24px;height:24px;"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 0v18M3.5 12h17"/></svg>', color: '#7c3aed',
-    bg: 'rgba(124,58,237,0.1)', border: 'rgba(124,58,237,0.25)',
-    fresh: '2h ago', queries: '12.4K', price: '0.002', tags: ['research'] },
-  { name: 'Crypto Market Data', cat: 'Finance', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:24px;height:24px;"><path d="M3 3v18h18M3 16l6-6 4 4 8-8"/></svg>', color: '#10b981',
-    bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.25)',
-    fresh: '15m ago', queries: '89.2K', price: '0.003', tags: ['finance'] },
-  { name: 'EU Legal Corpus 2026', cat: 'Legal', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:24px;height:24px;"><path d="M12 3v18M6 8l-4 4 4 4M18 8l4 4-4 4"/></svg>', color: '#f59e0b',
-    bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.25)',
-    fresh: '1d ago', queries: '4.1K', price: '0.005', tags: ['legal'] },
-  { name: 'SaaS Product Catalog', cat: 'Product Data', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:24px;height:24px;"><path d="M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8Z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22V12"/></svg>', color: '#2563eb',
-    bg: 'rgba(37,99,235,0.1)', border: 'rgba(37,99,235,0.25)',
-    fresh: '3h ago', queries: '31.7K', price: '0.002', tags: ['research'] },
-  { name: 'Tech News Feed', cat: 'News', icon: '📰', color: '#ef4444',
-    bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.25)',
-    fresh: '5m ago', queries: '156K', price: '0.001', tags: ['news'] },
-  { name: 'Fortune 500 Profiles', cat: 'Company Data', icon: '🏢', color: '#06b6d4',
-    bg: 'rgba(6,182,212,0.1)', border: 'rgba(6,182,212,0.25)',
-    fresh: '6h ago', queries: '22.9K', price: '0.004', tags: ['finance','research'] },
-  { name: 'VC Funding Rounds', cat: 'Finance', icon: '💰', color: '#10b981',
-    bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.25)',
-    fresh: '1h ago', queries: '8.3K', price: '0.003', tags: ['finance'] },
-  { name: 'Academic Papers AI', cat: 'Research', icon: '📄', color: '#a78bfa',
-    bg: 'rgba(167,139,250,0.1)', border: 'rgba(167,139,250,0.25)',
-    fresh: '4h ago', queries: '19.6K', price: '0.002', tags: ['research'] },
-];
-
-function renderDatasets(filter) {
-  const grid = document.getElementById('datasetGrid');
-  const toShow = filter === 'all'
-    ? DATASETS
-    : DATASETS.filter(d => d.tags.includes(filter));
-
-  grid.innerHTML = toShow.map(d => `
-    <div class="dataset-card">
-      <div class="card-top">
-        <div class="card-icon" style="background:${d.bg};border:1px solid ${d.border};">
-          ${d.icon}
-        </div>
-        <div class="card-badges">
-          <span class="agent-ready-badge">⚡ Agent-Ready</span>
-          <span class="freshness">🕐 ${d.fresh}</span>
-        </div>
-      </div>
-      <div class="card-name">${d.name}</div>
-      <div class="card-category">${d.cat}</div>
-      <div class="card-stats">
-        <span class="card-queries">🔍 ${d.queries} queries</span>
-        <span class="card-price">⬡ ${d.price} $INAI</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-function filterDatasets(filter, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+/* ─── TAB SWITCHING ──────────────────── */
+function switchTab(btn, panelId) {
+  const block = btn.closest('.code-block');
+  block.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+  block.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
-  renderDatasets(filter);
+  document.getElementById(panelId).classList.add('active');
 }
 
-renderDatasets('all');
-
-// ─── FLYWHEEL HIGHLIGHT ──────────────────────────────────────
-function highlightNode(n) {
-  // Simple pulse effect - just a visual cue
-  console.log('Flywheel node', n, 'clicked');
+/* ─── COPY CODE ──────────────────────── */
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  const text = pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  });
 }
 
-// ─── STAT COUNTER ANIMATION ──────────────────────────────────
-function animateCounter(el, target, suffix, duration) {
-  const start = parseInt(el.textContent.replace(/[^0-9]/g, '')) || 0;
-  const startTime = performance.now();
-  function update(now) {
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.round(start + (target - start) * eased);
-    el.textContent = current.toLocaleString() + suffix;
-    if (progress < 1) requestAnimationFrame(update);
-  }
-  requestAnimationFrame(update);
+/* ─── COPY INSTALL CMD ───────────────── */
+function copyInstall(el) {
+  const code = el.querySelector('code');
+  const text = code.textContent.replace('$ ', '');
+  navigator.clipboard.writeText(text).then(() => {
+    code.textContent = 'Copied to clipboard!';
+    setTimeout(() => { code.textContent = '$ openclaw skill install inflectiv-data-node'; }, 2000);
+  });
 }
 
-// Intersection observer for hero stats
-const heroObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      animateCounter(document.getElementById('stat-datasets'), 6700, '', 1500);
-      animateCounter(document.getElementById('stat-agents'), 6200, '', 1500);
-      animateCounter(document.getElementById('stat-users'), 10300, '', 1500);
-      heroObs.disconnect();
+/* ─── SCROLL REVEAL ──────────────────── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
     }
   });
-}, { threshold: 0.5 });
-const statsBar = document.querySelector('.stats-bar');
-if (statsBar) heroObs.observe(statsBar);
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-// ─── SMOOTH SCROLL OFFSET ────────────────────────────────────
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ─── SMOOTH SCROLL ──────────────────── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
+  a.addEventListener('click', (e) => {
+    const href = a.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
     if (target) {
-      e.preventDefault();
-      window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Close mobile nav if open
+      document.querySelector('.nav-mobile').classList.remove('open');
     }
   });
-});
-
-// ─── SCROLL REVEAL ───────────────────────────────────────────
-const revealObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-document.querySelectorAll('.dataset-card, .stat-card, .skill-step, .flywheel-list li').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-  revealObs.observe(el);
 });
 </script>
 </body>
